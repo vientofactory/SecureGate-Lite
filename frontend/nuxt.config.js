@@ -12,9 +12,6 @@ export default {
       { name: 'google-adsense-account', content: 'ca-pub-6469556883738104' },
       { hid: 'description', name: 'description', content: '디스코드 링크 보호 솔루션' }
     ],
-    script: [
-      { hid: 'stripe', async: true, src: 'https://t1.daumcdn.net/kas/static/ba.min.js' }
-    ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/images/favicon/favicon.ico' }
     ]
