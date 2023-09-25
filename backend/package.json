@@ -1,0 +1,46 @@
+{
+  "name": "securegate-backend",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "author": "vientorepublic",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "nodemon": "ts-node src/index.ts",
+    "dev": "CURRENT_GIT_SHA=`git rev-parse --short HEAD` CURRENT_GIT_BRANCH=`git branch --show-current` NODE_ENV=development nodemon",
+    "start": "CURRENT_GIT_SHA=`git rev-parse --short HEAD` CURRENT_GIT_BRANCH=`git branch --show-current` NODE_ENV=production node dist/index.js"
+  },
+  "dependencies": {
+    "@types/cookie-parser": "^1.4.3",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.17",
+    "@types/i18n": "^0.13.6",
+    "@types/morgan": "^1.9.4",
+    "@types/nodemailer": "^6.4.9",
+    "@types/nodemailer-smtp-transport": "^2.7.5",
+    "axios": "^1.4.0",
+    "consola": "^3.2.3",
+    "cookie-parser": "^1.4.6",
+    "dayjs": "^1.11.9",
+    "discord-webhook-node": "^1.1.8",
+    "discord.js": "^14.13.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-asyncify": "^2.1.1",
+    "handlebars": "^4.7.8",
+    "i18n": "^0.15.1",
+    "mongoose": "^7.4.4",
+    "morgan": "^1.10.0",
+    "node-fetch": "^3.3.2",
+    "nodemailer": "^6.9.4",
+    "nodemailer-smtp-transport": "^2.7.4",
+    "winston": "^3.10.0",
+    "winston-daily-rotate-file": "^4.7.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
+}
