@@ -2,7 +2,6 @@ import { readdirSync } from 'fs';
 import { join } from 'path';
 import express, { json, urlencoded, Request, Response, Application } from 'express';
 import { stream, DBManager } from './modules';
-import { initalizer } from './modules/init';
 import i18n from './modules/middlewares/i18n';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
@@ -23,7 +22,6 @@ export class Server {
   }
   private initialize() {
     new DBManager().connect(process.env.MONGODB_URI);
-    new initalizer();
   }
   private setMiddlewares() {
     this.app.use(json());

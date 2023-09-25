@@ -1,6 +1,6 @@
 import { Guild } from 'discord.js';
 import { Webhook, MessageBuilder } from 'discord-webhook-node';
-import { approvalSchema, guildSchema, linkSchema } from '../../models';
+import { guildSchema, linkSchema } from '../../models';
 import { BotEvent } from '../types';
 
 const webhookURL = process.env.LOG_WEBHOOK;
@@ -10,15 +10,11 @@ const event: BotEvent = {
   async execute(guild: Guild) {
     const checkGuild = await guildSchema.findOne({ id: guild.id });
     const checkLinks = await linkSchema.find({ gid: guild.id });
-    const checkApproval = await approvalSchema.find({ guild_id: guild.id });
     if (checkGuild) {
       await guildSchema.deleteOne({ id: guild.id });
       if (checkLinks.length) {
         await linkSchema.deleteMany({ gid: guild.id });
       }
-    }
-    if (checkApproval.length) {
-      await approvalSchema.deleteMany({ guild_id: guild.id });
     }
     try {
       if (webhookURL) {
