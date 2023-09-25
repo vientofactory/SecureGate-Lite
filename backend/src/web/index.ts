@@ -2,7 +2,7 @@ import { readdirSync } from 'fs';
 import { join } from 'path';
 import express, { json, urlencoded, Request, Response, Application } from 'express';
 import { stream, DBManager } from './modules';
-import i18n from './modules/middlewares/i18n';
+import { i18nMiddleware } from './modules/middlewares';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import asyncify from 'express-asyncify';
@@ -27,7 +27,7 @@ export class Server {
     this.app.use(json());
     this.app.use(cookieParser());
     this.app.use(urlencoded({ extended: true }));
-    this.app.use(i18n);
+    this.app.use(i18nMiddleware);
     if (!this.isDev) this.app.use(morgan('combined', { stream }));
     else this.app.use(morgan('dev'));
     this.app.disable('x-powered-by');

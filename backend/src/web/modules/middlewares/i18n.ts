@@ -16,4 +16,4 @@ class middleware {
   }
 }
 
-export default new middleware().mainController;
+export const i18nMiddleware = new middleware().mainController;

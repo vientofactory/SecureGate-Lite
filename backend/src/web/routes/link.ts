@@ -1,7 +1,8 @@
 import { Router, Request, Response } from 'express';
-import { captcha, mail, checkUser, utils } from '../modules';
-import { guildSchema, userSchema, linkSchema } from '../../models';
+import { captcha, checkUser } from '../modules/middlewares';
+import { mail, utils } from '../modules';
 import { stream } from '../modules';
+import { guildSchema, userSchema, linkSchema } from '../../models';
 import client from '../../bot';
 import consola from 'consola';
 import dayjs from 'dayjs';

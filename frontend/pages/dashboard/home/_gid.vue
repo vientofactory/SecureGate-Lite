@@ -159,7 +159,6 @@
                   {{ $t('n-n-u') }}: {{ data.number_of_uses }}
                 </v-card-text>
                 <v-card-text>
-                  <v-btn v-if="data.auth_method === 4" color="green" :to="getApprovalLink(guild.id)">승인/거부 관리</v-btn>
                   <v-btn color="red" @click="delete_target = data.identifier; dialog_delete_confirm = true"
                     :disabled="deleting">
                     {{ $t('delete') }}
@@ -237,10 +236,6 @@
     delete-confirm: "초대 링크를 삭제하시겠습니까? 해당 링크는 더 이상 작동하지 않을 것입니다."
     delete: "삭제"
     created-at: "생성일"
-    webhook: "웹후크"
-    webhook-desc: "유저가 초대 링크로 인증을 마치고 서버에 참여하면 알림 메시지를 보내드립니다."
-    register: "등록"
-    webhook-placeholder: "디스코드 웹후크 URL을 입력하세요."
   en:
     title: "Link Management"
     login-required: "You will need to login with your Discord account to do this."
@@ -290,10 +285,6 @@
     delete-confirm: "Are you sure you want to delete the invitation link? That link will no longer work."
     delete: "Delete"
     created-at: "Creation date"
-    webhook: "Webhook"
-    webhook-desc: "When the user completes authentication using the invitation link and joins the server, a notification message will be sent."
-    register: "Register"
-    webhook-placeholder: "Enter the Discord webhook URL."
 </i18n>
 
 <script>
@@ -539,10 +530,6 @@ export default {
           return this.$t('captcha');
         case 2:
           return this.$t('email');
-        case 3:
-          return this.$t('qna')
-        case 4:
-          return '관리자 승인';
         default:
           return 'Unknown';
       }
