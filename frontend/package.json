@@ -1,0 +1,32 @@
+{
+  "name": "securegate",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "NUXT_ENV_CURRENT_GIT_SHA=`git rev-parse --short HEAD` NUXT_ENV_CURRENT_GIT_BRANCH=`git branch --show-current` nuxt",
+    "build": "NUXT_ENV_CURRENT_GIT_SHA=`git rev-parse --short HEAD` NUXT_ENV_CURRENT_GIT_BRANCH=`git branch --show-current` nuxt build",
+    "start": "NUXT_ENV_CURRENT_GIT_SHA=`git rev-parse --short HEAD` NUXT_ENV_CURRENT_GIT_BRANCH=`git branch --show-current` nuxt start",
+    "generate": "nuxt generate"
+  },
+  "dependencies": {
+    "@nuxtjs/auth-next": "^5.0.0-1667386184.dfbbb54",
+    "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/dayjs": "^1.4.1",
+    "@nuxtjs/dotenv": "^1.4.1",
+    "@nuxtjs/i18n": "^7.3.1",
+    "@nuxtjs/proxy": "^2.1.0",
+    "@nuxtjs/recaptcha": "^1.1.2",
+    "cookie-universal-nuxt": "^2.2.2",
+    "core-js": "^3.25.3",
+    "dotenv": "^16.3.1",
+    "javascript-obfuscator": "4.0.2",
+    "nuxt": "^2.15.8",
+    "vue": "^2.7.10",
+    "vue-server-renderer": "^2.7.10",
+    "vue-template-compiler": "^2.7.10",
+    "vuetify": "^2.6.10"
+  },
+  "devDependencies": {
+    "@nuxtjs/vuetify": "^1.12.3"
+  }
+}

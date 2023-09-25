@@ -1,0 +1,111 @@
+body.invite {
+  overflow: hidden;
+}
+
+#invitese {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#invitese .artwork {
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 600px;
+  padding: 35px;
+  /* border: 1px solid #000; */
+  border-radius: 10px;
+  box-shadow: 0 0 15px 0 rgb(0 0 0 / 40%);
+  background-color: #36393f;
+}
+
+.container>div {
+  margin-bottom: 20px;
+}
+
+#invitese .message {
+  font-size: 1.15em;
+  color: #a8abae;
+  margin-bottom: 10px;
+}
+
+#invitese .serverName {
+  font-size: 2em;
+  font-weight: 600;
+}
+
+#invitese .userCount {
+  display: flex;
+  margin-bottom: 30px;
+}
+
+#invitese .userCount>div {
+  display: flex;
+  align-items: center;
+}
+
+#invitese .userCount>div:first-child {
+  margin-right: 20px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.dot#online {
+  background-color: #43b581;
+}
+
+.dot#member {
+  background-color: #747f8d;
+}
+
+#invitese .userInfo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #45474e;
+  box-shadow: 0 0 10px 0 rgb(0 0 0 / 10%);
+  width: 70%;
+}
+
+#invitese .joinBtn {
+  text-align: center;
+  border-radius: 5px;
+  padding: 12.5px;
+  box-shadow: 0 0 10px 0 rgb(0 0 0 / 20%);
+  font-weight: 700;
+  font-size: 1.15em;
+  cursor: pointer;
+  width: 70%;
+  background-color: #6572ff;
+}
+
+@media (max-width: 700px) {
+  .container {
+    min-width: 90vw;
+  }
+
+  #invitese .joinBtn,
+  #invitese .userInfo {
+    width: 100%;
+  }
+}

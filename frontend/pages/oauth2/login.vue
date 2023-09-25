@@ -1,0 +1,37 @@
+<template>
+  <v-app>
+    <v-parallax src="/images/Empty.png">
+      <div class="d-flex flex-column fill-height justify-center align-center text-white">
+        <h1 class="text-h4 font-weight-bold mb-4">
+          {{ $t('title') }}
+        </h1>
+        <h4 class="subheading font-weight-thin">
+          {{ $t('subtitle') }}
+        </h4>
+      </div>
+    </v-parallax>
+  </v-app>
+</template>
+
+<i18n lang="yaml">
+  ko:
+    title: "디스코드 계정으로 로그인 하는 중..."
+    subtitle: "화면이 자동으로 넘어가지 않는다면 페이지를 새로고침 해주세요."
+  en:
+    title: "Logging in with your Discord account..."
+    subtitle: "If the screen does not advance automatically, please refresh the page."
+</i18n>
+
+<script>
+export default {
+  name: 'OAuth2Login',
+  layout: 'invite',
+  head: {
+    title: 'Login'
+  },
+  mounted() {
+    if (!this.$auth.loggedIn) this.$auth.loginWith('discord');
+    else this.$router.push({ path: `/?error=${encodeURIComponent('이미 로그인 되어있습니다.')}` });
+  }
+}
+</script>
