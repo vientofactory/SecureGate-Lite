@@ -1,5 +1,5 @@
 # SecureGate-Lite
-SecureGate 프로젝트의 일부 기능을 제외하고 경량화시킨 오픈소스 버전입니다.
+[SecureGate](https://securegate.gg) 프로젝트의 일부 기능을 제외하고 경량화시킨 오픈소스 버전입니다.
 
 **AGPL 3.0 라이선스를 사용합니다.**
 
