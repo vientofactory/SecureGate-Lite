@@ -9,6 +9,43 @@ SecureGate 프로젝트의 일부 기능을 제외하고 경량화시킨 오픈�
  - 무중단 서비스 환경을 만들기 위해 PM2 사용을 추천합니다. 설치되어 있지 않다면 [여기](https://pm2.keymetrics.io/docs/usage/quick-start/)를 참고해서 설치 후 진행해주세요.
  - 환경변수 (.env)를 적절히 수정해주세요.
 
+# 환경변수 (.env)
+## frontend
+```env
+BRAND="SecureGate"
+BACKEND_HOST="http://localhost:3001"
+FRONTEND_HOST="(프론트엔드 URL)"
+RECAPTCHA_SITE="(reCAPTCHA 사이트 키)"
+CLIENT_ID="(클라이언트 ID)"
+CLIENT_SECRET="(클라이언트 시크릿키)"
+PERMISSIONS="268453889"
+VER="1.0.0"
+```
+
+## backend
+```env
+PORT="3001"
+FRONTEND_HOST="(프론트엔드 URL)"
+BRAND="SecureGate"
+MONGODB_URI="(MongoDB URL)"
+LOG_WEBHOOK="(로그 전송에 쓰일 웹후크 URL)"
+BOT_TOKEN="(봇 토큰)"
+CLIENT_ID="(클라이언트 ID)"
+CLIENT_SECRET="(클라이언트 시크릿키)"
+RECAPTCHA_SECRET="(reCAPTCHA 시크릿키)"
+SUPERUSER="(최고관리자 ID)"
+MAX_ALLOWED_INVITES="5" # 생성 가능한 최대 초대 링크 개수
+SMTP_HOST="(SMTP 서버 주소)"
+SMTP_PORT="(SMTP 서버 포트)"
+SMTP_USER="(SMTP 사용자)"
+SMTP_PASSWORD="(SMTP 비밀번호)"
+SMTP_SENDER="(이메일 전송자)"
+SMTP_SENDER_NAME="SecureGate" # 이메일 전송자명
+VERIFY_HTML_TEMPLATE="verify.html"
+NOTIFY_HTML_TEMPLATE="notify.html"
+EXPIRES="86400000"
+```
+
 # 설치
 ## 1. 저장소 포크
 ```
