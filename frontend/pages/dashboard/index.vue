@@ -45,9 +45,6 @@
             </v-card>
           </v-col>
         </v-row>
-        <div class="mt-5">
-          <Banner />
-        </div>
       </div>
     </v-container>
   </v-app>
@@ -75,14 +72,10 @@
 </i18n>
 
 <script>
-import Banner from '../../components/banner.vue';
 export default {
   name: 'DashboardIndex',
   head: {
     title: 'Server Selector'
-  },
-  components: {
-    Banner
   },
   data() {
     return {

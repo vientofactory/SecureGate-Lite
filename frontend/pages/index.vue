@@ -126,7 +126,6 @@
         </span>
       </div>
     </v-parallax>
-
   </v-app>
 </template>
 
