@@ -21,7 +21,7 @@
     "dotenv": "^16.3.1",
     "javascript-obfuscator": "4.0.2",
     "nuxt": "^2.15.8",
-    "vue": "^2.7.10",
+    "vue": "^3.0.0",
     "vue-server-renderer": "^2.7.10",
     "vue-template-compiler": "^2.7.10",
     "vuetify": "^2.6.10"
