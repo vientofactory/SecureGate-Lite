@@ -33,13 +33,19 @@ sh setup.sh
 yarn build
 ```
 
-## 5. 서버 시작 (운영 환경)
+## 5-1. 서버 시작 (운영 환경)
 ```
 cd frontend/
 pm2 start
 cd ..
 cd backend/
 pm2 start
+```
+
+## 5-2. 서버 시작 (개발 환경)
+```
+(frontend, backend)
+yarn dev
 ```
 
 # 마치며...
