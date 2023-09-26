@@ -3,6 +3,7 @@ import { captcha, checkUser } from '../modules/middlewares';
 import { mail, utils } from '../modules';
 import { stream } from '../modules';
 import { guildSchema, userSchema, linkSchema } from '../../models';
+import { role } from '../types';
 import client from '../../bot';
 import consola from 'consola';
 import dayjs from 'dayjs';
@@ -166,7 +167,7 @@ class IRouter {
 
       const guild = await utils.getGuild(gid);
       if (guild) {
-        const guildDB = await guildSchema.findOne({ id: guild.id });
+        const guildDB = await guildSchema.findOne({ gid: guild.id });
         if (guildDB) {
           const token = accessToken.replace('Bearer ', '');
           const permissions = await utils.getGuildUserPermissions(token, gid);
@@ -192,7 +193,7 @@ class IRouter {
               const discordUser = await utils.getUser(token);
               if (role) {
                 let roles: any[] = [];
-                guild.roles.forEach((e: any) => {
+                guild.roles.forEach((e: role) => {
                   if (!e.managed && e.name !== '@everyone') roles.push(e.id);
                 });
                 const filter = roles.find(e => e === role);
@@ -325,7 +326,7 @@ class IRouter {
 
       const guild = await utils.getGuild(gid);
       if (guild) {
-        const guildDB = await guildSchema.findOne({ id: guild.id });
+        const guildDB = await guildSchema.findOne({ gid: guild.id });
         if (guildDB) {
           const token = accessToken.replace('Bearer ', '');
           const permissions = await utils.getGuildUserPermissions(token, gid);
@@ -345,7 +346,7 @@ class IRouter {
               const expireTime = utils.getExpires(expire);
               if (role) {
                 let roles: any[] = [];
-                guild.roles.forEach((e: any) => {
+                guild.roles.forEach((e: role) => {
                   if (!e.managed && e.name !== '@everyone') roles.push(e.id);
                 });
                 const filter = roles.find(e => e === role);

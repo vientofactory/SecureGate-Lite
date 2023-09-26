@@ -36,3 +36,9 @@ export interface notify_locale_param {
   btn?: string;
   from: string;
 }
+
+export interface role {
+  managed: boolean;
+  name: string;
+  id: string;
+}
