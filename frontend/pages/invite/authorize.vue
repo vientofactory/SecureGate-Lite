@@ -92,7 +92,7 @@ export default {
   },
   methods: {
     check: function (id) {
-      this.$axios.get(`/api/link/email/check?id=${id}`).then(() => {
+      this.$axios.get(`/api/link/authorization/email?id=${id}`).then(() => {
         this.loading = false;
       }).catch((err) => {
         this.loading = false;
@@ -101,7 +101,7 @@ export default {
     },
     verify: function (id) {
       this.verifying = true;
-      this.$axios.post('/api/link/email', {
+      this.$axios.post('/api/link/authorization/email/verify', {
         identifier: id
       }).then((res) => {
         this.verifying = false;

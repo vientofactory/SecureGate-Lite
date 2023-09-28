@@ -56,7 +56,7 @@
                 </v-alert>
               </v-card-text>
               <form
-                @submit.prevent="submit(guild.id, selected_role, selected_expires, selected_method, custom_link, custom_link_input, question_input, answer_input)">
+                @submit.prevent="submit(guild.id, selected_role, selected_method, custom_link_input, selected_expires, question_input, answer_input)">
                 <v-card-text>
                   {{ $t('auth-method') }}
                   <v-select v-model="selected_method" :items="methods" :label="$t('auth-method-placeholder')"
@@ -393,17 +393,17 @@ export default {
     }
   },
   methods: {
-    submit: function (gid, role, expire, method, custom, custom_id, question, answer) {
-      if (custom) this.createCustomLink(gid, role, method, expire, custom_id, question, answer);
-      else this.createLink(gid, role, method, expire, question, answer);
+    submit: function (gid, role, method, custom_id, expire, question, answer) {
+      this.createLink(gid, role, method, custom_id, expire, question, answer);
     },
-    createLink: function (gid, role, method, expire, question, answer) {
+    createLink: function (gid, role, method, id, expire, question, answer) {
       if (!this.selected_method || !this.selected_expires) {
         this.dialog_create_error = true;
         this.create_error = this.$t('select-required');
       } else {
         this.creating = true;
         this.$axios.post('/api/link/create', {
+          id,
           gid,
           role,
           method,
@@ -488,7 +488,7 @@ export default {
       });
     },
     getLinks: function (id) {
-      this.$axios.get(`/api/link/get?id=${id}`, { progress: false }).then((res) => {
+      this.$axios.get(`/api/link?id=${id}`, { progress: false }).then((res) => {
         this.create_limit = res.data.create_limit;
         this.links = res.data.data;
       }).catch((err) => {
