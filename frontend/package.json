@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "NUXT_ENV_CURRENT_GIT_SHA=`git rev-parse --short HEAD` NUXT_ENV_CURRENT_GIT_BRANCH=`git branch --show-current` nuxt",
-    "build": "NUXT_ENV_CURRENT_GIT_SHA=`git rev-parse --short HEAD` NUXT_ENV_CURRENT_GIT_BRANCH=`git branch --show-current` nuxt build",
-    "start": "NUXT_ENV_CURRENT_GIT_SHA=`git rev-parse --short HEAD` NUXT_ENV_CURRENT_GIT_BRANCH=`git branch --show-current` nuxt start",
+    "dev": "node ./dev.js",
+    "build": "node ./build.js",
+    "start": "nuxt start",
     "generate": "nuxt generate"
   },
   "dependencies": {

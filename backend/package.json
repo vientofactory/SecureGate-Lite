@@ -6,10 +6,10 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "tsc",
+    "build": "node ./build.js",
     "nodemon": "ts-node src/index.ts",
-    "dev": "CURRENT_GIT_SHA=`git rev-parse --short HEAD` CURRENT_GIT_BRANCH=`git branch --show-current` NODE_ENV=development nodemon",
-    "start": "CURRENT_GIT_SHA=`git rev-parse --short HEAD` CURRENT_GIT_BRANCH=`git branch --show-current` NODE_ENV=production node dist/index.js"
+    "dev": "node ./dev.js",
+    "start": "node ./start.js"
   },
   "dependencies": {
     "@types/cookie-parser": "^1.4.3",
