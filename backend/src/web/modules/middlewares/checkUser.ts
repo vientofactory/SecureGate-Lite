@@ -15,9 +15,9 @@ class middleware {
         });
       }
 
-      const discordUser = await utils.getUser(accessToken.replace('Bearer ', ''));
-      if (discordUser) {
-        const localUser = await userSchema.findOne({ id: discordUser.id });
+      const user = await utils.getUser(accessToken.replace('Bearer ', ''));
+      if (user && user.status === 200) {
+        const localUser = await userSchema.findOne({ id: user.data.id });
         if (localUser) {
           if (localUser.refresh_token !== refreshToken) {
             await localUser.updateOne({
@@ -28,8 +28,8 @@ class middleware {
           }
         } else {
           const data = new userSchema({
-            id: discordUser.id,
-            email: discordUser.email,
+            id: user.data.id,
+            email: user.data.email,
             createdAt: new Date().getTime(),
             refresh_token: refreshToken
           });

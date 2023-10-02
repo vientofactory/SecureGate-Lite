@@ -18,9 +18,9 @@ class IRouter {
       const check = await linkSchema.findOne({ identifier: id });
       if (check) {
         const guild = await utils.getGuild(check.gid);
-        if (guild) {
+        if (guild && guild.status === 200) {
           const token = accessToken.replace('Bearer ', '');
-          const permissions = await utils.getGuildUserPermissions(token, guild.id);
+          const permissions = await utils.getGuildUserPermissions(token, guild.data.id);
           if (permissions) {
             if (utils.isAdmin(permissions)) {
               await linkSchema.deleteMany({ identifier: id });

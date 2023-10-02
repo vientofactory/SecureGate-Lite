@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { stream } from '../modules';
 import { utils } from '../modules';
+import { role } from '../types';
 import client from '../../bot';
 import consola from 'consola';
 
@@ -59,9 +60,9 @@ class IRouter {
       }
 
       const guild = await utils.getGuild(id);
-      if (guild) {
+      if (guild && guild.status === 200) {
         let filtered: any[] = [];
-        guild.roles.forEach((e: any) => {
+        guild.data.roles.forEach((e: role) => {
           if (!e.managed && e.name !== '@everyone') {
             filtered.push({
               id: e.id,

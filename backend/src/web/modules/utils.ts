@@ -1,5 +1,5 @@
 import { linkSchema } from '../../models';
-import axios from 'axios';
+import axios, { isAxiosError, ResponseType } from 'axios';
 import dayjs from 'dayjs';
 import fs from 'fs';
 
@@ -12,48 +12,33 @@ const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567
 class utility {
   public async joinGuild(token: string, gid: string, uid: string, role: string) {
     try {
-      if (role) {
-        const res = await axios.put(`https://discordapp.com/api/guilds/${gid}/members/${uid}`, {
-          access_token: token,
-          roles: [role]
-        }, {
-          headers: {
-            'Authorization': `Bot ${botToken}`,
-            'Content-Type': 'application/json'
-          }
-        });
-        switch (res.status) {
-          case 201:
-            return 'SUCCESS';
-          case 204:
-            return 'ALREADY_INVITED';
-          default:
-            return 'UNKNOWN';
+      const res = await axios.put(`https://discordapp.com/api/guilds/${gid}/members/${uid}`, {
+        access_token: token,
+        roles: role ? [role] : null
+      }, {
+        headers: {
+          'Authorization': `Bot ${botToken}`,
+          'Content-Type': 'application/json'
         }
-      } else {
-        const res = await axios.put(`https://discordapp.com/api/guilds/${gid}/members/${uid}`, {
-          access_token: token
-        }, {
-          headers: {
-            'Authorization': `Bot ${botToken}`,
-            'Content-Type': 'application/json'
-          }
-        });
-        switch (res.status) {
-          case 201:
-            return 'SUCCESS';
-          case 204:
-            return 'ALREADY_INVITED';
-          default:
-            return 'UNKNOWN';
-        }
-      }
-    } catch (err: any) {
-      switch (err.response.status) {
-        case 403:
-          return 'PERMISSION_DENIED';
+      });
+      switch (res.status) {
+        case 201:
+          return 'SUCCESS';
+        case 204:
+          return 'ALREADY_INVITED';
         default:
           return 'UNKNOWN';
+      }
+    } catch (err) {
+      if (isAxiosError<ResponseType, any>(err)) {
+        if (err.response) {
+          switch (err.response.status) {
+            case 403:
+              return 'PERMISSION_DENIED';
+            default:
+              return 'UNKNOWN';
+          }
+        }
       }
     }
   }
@@ -64,9 +49,21 @@ class utility {
           'Authorization': `Bearer ${token}`
         }
       });
-      return res.data;
+      return {
+        data: res.data,
+        status: res.status
+      };
     } catch (err) {
-      return null;
+      if (isAxiosError<ResponseType, any>(err)) {
+        if (err.response) {
+          return {
+            data: err.response.data,
+            status: err.status
+          };
+        } else {
+          return null;
+        }
+      }
     }
   }
   public async getGuild(id: string) {
@@ -76,9 +73,21 @@ class utility {
           'Authorization': `Bot ${botToken}`
         }
       });
-      return res.data;
+      return {
+        data: res.data,
+        status: res.status
+      };
     } catch (err) {
-      return null;
+      if (isAxiosError<ResponseType, any>(err)) {
+        if (err.response) {
+          return {
+            data: err.response.data,
+            status: err.status
+          };
+        } else {
+          return null;
+        }
+      }
     }
   }
   public async getGuildsByUser(token: string) {

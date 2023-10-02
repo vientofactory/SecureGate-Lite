@@ -24,8 +24,8 @@ class IRouter {
       }
 
       const guild = await utils.getGuild(gid);
-      if (guild) {
-        const guildDB = await guildSchema.findOne({ gid: guild.id });
+      if (guild && guild.status === 200) {
+        const guildDB = await guildSchema.findOne({ gid: guild.data.id });
         if (guildDB) {
           const token = accessToken.replace('Bearer ', '');
           const permissions = await utils.getGuildUserPermissions(token, gid);
@@ -74,19 +74,19 @@ class IRouter {
                 const discordUser = await utils.getUser(token);
                 if (role) {
                   let roles: any[] = [];
-                  guild.roles.forEach((e: role) => {
+                  guild.data.roles.forEach((e: role) => {
                     if (!e.managed && e.name !== '@everyone') roles.push(e.id);
                   });
                   const filter = roles.find(e => e === role);
                   if (filter) {
                     const newLink = new linkSchema({
                       identifier: id,
-                      gid: guild.id,
+                      gid: guild.data.id,
                       role: filter,
                       createdAt: now,
                       expiresAt: expireTime,
                       auth_method: Number(method),
-                      issuer: discordUser.id,
+                      issuer: discordUser?.data.id,
                       no_expires: false
                     });
                     newLink.save().then(() => {
@@ -109,12 +109,12 @@ class IRouter {
                 } else {
                   const newLink = new linkSchema({
                     identifier: id,
-                    gid: guild.id,
+                    gid: guild.data.id,
                     role: null,
                     createdAt: now,
                     expiresAt: expireTime,
                     auth_method: Number(method),
-                    issuer: discordUser.id,
+                    issuer: discordUser?.data.id,
                     no_expires: false
                   });
                   newLink.save().then(() => {
@@ -138,19 +138,19 @@ class IRouter {
                 const discordUser = await utils.getUser(token);
                 if (role) {
                   let roles: any[] = [];
-                  guild.roles.forEach((e: role) => {
+                  guild.data.roles.forEach((e: role) => {
                     if (!e.managed && e.name !== '@everyone') roles.push(e.id);
                   });
                   const filter = roles.find(e => e === role);
                   if (filter) { //Selected role
                     const newLink = new linkSchema({
                       identifier: identifier,
-                      gid: guild.id,
+                      gid: guild.data.id,
                       role: filter,
                       createdAt: now,
                       expiresAt: expireTime ? expireTime : 0,
                       auth_method: Number(method),
-                      issuer: discordUser.id,
+                      issuer: discordUser?.data.id,
                       no_expires: expireTime ? false : true
                     });
                     newLink.save().then(() => {
@@ -173,12 +173,12 @@ class IRouter {
                 } else { //Without selected role
                   const newLink = new linkSchema({
                     identifier: identifier,
-                    gid: guild.id,
+                    gid: guild.data.id,
                     role: null,
                     createdAt: now,
                     expiresAt: expireTime ? expireTime : 0,
                     auth_method: Number(method),
-                    issuer: discordUser.id,
+                    issuer: discordUser?.data.id,
                     no_expires: expireTime ? false : true
                   });
                   newLink.save().then(() => {

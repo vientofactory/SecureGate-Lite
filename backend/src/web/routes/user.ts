@@ -19,22 +19,22 @@ class IRouter {
       }
 
       const token = accessToken.replace('Bearer ', '');
-      const discordUser = await utils.getUser(token);
-      if (discordUser) {
+      const user = await utils.getUser(token);
+      if (user && user.status === 200) {
         return res.json({
           code: 200,
           data: {
-            id: discordUser.id,
-            username: discordUser.username,
-            avatar: discordUser.avatar,
-            global_name: discordUser.global_name,
-            email: discordUser.email
+            id: user.data.id,
+            username: user.data.username,
+            avatar: user.data.avatar,
+            global_name: user.data.global_name,
+            email: user.data.email
           }
         });
       } else {
         return res.status(401).json({
           code: 401,
-          message: res.__('DISCORDUSER_VALIDATION_FAILED')
+          message: res.__('user_VALIDATION_FAILED')
         });
       }
     } catch (err) {

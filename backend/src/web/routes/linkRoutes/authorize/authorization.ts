@@ -31,7 +31,7 @@ class IRouter {
 
       const token = accessToken.replace('Bearer ', '');
       const discordUser = await utils.getUser(token);
-      const localuser = await userSchema.findOne({ id: discordUser.id });
+      const localuser = await userSchema.findOne({ id: discordUser?.data.id });
       if (localuser) {
         const link = await linkSchema.findOne({ identifier: id });
         if (link) {
@@ -51,7 +51,7 @@ class IRouter {
                   message: res.__('CAPTCHA_ERROR')
                 });
               }
-              const invite = await utils.joinGuild(token, link.gid, discordUser.id, link.role as string);
+              const invite = await utils.joinGuild(token, link.gid, discordUser?.data.id, link.role as string);
               switch (invite) {
                 case 'SUCCESS':
                   link.updateOne({
@@ -93,7 +93,7 @@ class IRouter {
                   message: res.__('EMAIL_FORMAT_ERROR')
                 });
               }
-              const identifier = Buffer.from(`${discordUser.id}+${link.identifier}+${utils.genRandomString(32)}`).toString('base64');
+              const identifier = Buffer.from(`${discordUser?.data.id}+${link.identifier}+${utils.genRandomString(32)}`).toString('base64');
               const guild = client.guilds.cache.get(link.gid);
               if (!guild) {
                 return res.status(404).json({
@@ -123,7 +123,7 @@ class IRouter {
                     brand: brand,
                   }, { //LOCALES
                     header: res.__('EMAIL_HEAD'),
-                    user: res.__('EMAIL_USER', { user: `${discordUser.global_name} (@${discordUser.username})` }),
+                    user: res.__('EMAIL_USER', { user: `${discordUser?.data.global_name} (@${discordUser?.data.username})` }),
                     desc: res.__('EMAIL_DESC'),
                     btn: res.__('EMAIL_BTN'),
                     ignore: res.__('EMAIL_IGNORE'),
@@ -144,7 +144,7 @@ class IRouter {
                     brand: brand,
                   }, { //LOCALES
                     header: res.__('EMAIL_HEAD'),
-                    user: res.__('EMAIL_USER', { user: `${discordUser.global_name} (@${discordUser.username})` }),
+                    user: res.__('EMAIL_USER', { user: `${discordUser?.data.global_name} (@${discordUser?.data.username})` }),
                     desc: res.__('EMAIL_DESC'),
                     btn: res.__('EMAIL_BTN'),
                     ignore: res.__('EMAIL_IGNORE'),
