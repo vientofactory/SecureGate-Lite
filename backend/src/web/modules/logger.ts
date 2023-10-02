@@ -1,27 +1,27 @@
-import winston, { format } from 'winston';
-import winstonDaily from 'winston-daily-rotate-file';
+import winston, { format } from "winston";
+import winstonDaily from "winston-daily-rotate-file";
 const { combine, timestamp, printf } = format;
 
-const customFormat = printf(info => {
+const customFormat = printf((info) => {
   return `${info.timestamp} ${info.level}: ${info.message}`;
 });
 
 export const logger = winston.createLogger({
   format: combine(
     timestamp({
-      format: 'YYYY-MM-DD HH:mm:ss',
+      format: "YYYY-MM-DD HH:mm:ss",
     }),
-    customFormat,
+    customFormat
   ),
   transports: [
     new winston.transports.Console(),
 
     new winstonDaily({
-      level: 'info',
-      datePattern: 'YYYYMMDD',
-      dirname: './logs',
+      level: "info",
+      datePattern: "YYYYMMDD",
+      dirname: "./logs",
       filename: `Backend_%DATE%.log`,
-      maxFiles: 14
+      maxFiles: 14,
     }),
   ],
 });
@@ -29,5 +29,5 @@ export const logger = winston.createLogger({
 export const stream = {
   write: (message: string) => {
     logger.info(message);
-  }
-}
+  },
+};

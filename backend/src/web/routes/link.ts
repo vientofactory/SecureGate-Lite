@@ -1,19 +1,9 @@
-import { Router } from 'express';
-import { checkUser } from '../modules/middlewares';
+import { Router } from "express";
+import { checkUser } from "../modules/middlewares";
 
-import {
-  getLinks,
-  checkLink,
-  createLink,
-  deleteLink,
-  formValidation
-} from './linkRoutes/link';
+import { getLinks, checkLink, createLink, deleteLink, formValidation } from "./linkRoutes/link";
 
-import {
-  authorization,
-  checkEmailAuth,
-  emailAuth
-} from './linkRoutes/authorize';
+import { authorization, checkEmailAuth, emailAuth } from "./linkRoutes/authorize";
 
 class IRouter {
   /**
@@ -23,20 +13,20 @@ class IRouter {
   constructor() {
     this.router = Router();
     /** Get from dashboard page */
-    this.router.get('/', getLinks);
+    this.router.get("/", getLinks);
     /** Check from invite page */
-    this.router.get('/check', checkLink);
+    this.router.get("/check", checkLink);
     /** Create link */
-    this.router.post('/create', checkUser, createLink);
+    this.router.post("/create", checkUser, createLink);
     /** Form validition from server */
-    this.router.get('/create/custom/validation', formValidation);
+    this.router.get("/create/custom/validation", formValidation);
     /** Delete link */
-    this.router.delete('/delete', checkUser, deleteLink);
+    this.router.delete("/delete", checkUser, deleteLink);
     /** Check link status */
-    this.router.get('/authorization/email', checkUser, checkEmailAuth);
+    this.router.get("/authorization/email", checkUser, checkEmailAuth);
     /** Auth & Participation */
-    this.router.post('/authorization', checkUser, authorization);
-    this.router.post('/authorization/email/verify', checkUser, emailAuth);
+    this.router.post("/authorization", checkUser, authorization);
+    this.router.post("/authorization/email/verify", checkUser, emailAuth);
   }
 }
 

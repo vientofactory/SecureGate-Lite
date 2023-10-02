@@ -1,13 +1,10 @@
-import { SlashCommandBuilder } from 'discord.js';
-import { guildSchema, linkSchema } from '../../models';
-import { SlashCommand } from '../types';
-import dayjs from 'dayjs';
+import { SlashCommandBuilder } from "discord.js";
+import { guildSchema, linkSchema } from "../../models";
+import { SlashCommand } from "../types";
+import dayjs from "dayjs";
 
 const command: SlashCommand = {
-  command: new SlashCommandBuilder()
-    .setName('stats')
-    .setDescription('봇의 통계를 봅니다.')
-  ,
+  command: new SlashCommandBuilder().setName("stats").setDescription("봇의 통계를 봅니다."),
   async execute(interaction) {
     try {
       let now = dayjs().valueOf();
@@ -25,16 +22,16 @@ const command: SlashCommand = {
         `> 전체 유저: ${users}명`,
         `> DB에 등록된 길드: ${guildDBCount}개`,
         `> 전체 링크 데이터: ${links.length}개`,
-        `> 활성 링크: ${activeLinks}개`
+        `> 활성 링크: ${activeLinks}개`,
       ];
-      return interaction.reply(messages.join('\n'));
+      return interaction.reply(messages.join("\n"));
     } catch (err) {
       return interaction.reply({
         content: `[ ❌ ] Error: ${err}`,
-        ephemeral: true
+        ephemeral: true,
       });
     }
-  }
-}
+  },
+};
 
 export default command;

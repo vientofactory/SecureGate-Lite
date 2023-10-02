@@ -20,12 +20,12 @@
 
 <script>
 export default {
-  name: 'ErrorLayout',
+  name: "ErrorLayout",
   head: {
-    title: 'Error'
+    title: "Error",
   },
-  props: ['error']
-}
+  props: ["error"],
+};
 </script>
 
 <style>

@@ -1,18 +1,18 @@
-import { Request, Response } from 'express';
-import { linkSchema } from '../../../../models';
-import { stream } from '../../../modules';
-import dayjs from 'dayjs';
-import consola from 'consola';
+import { Request, Response } from "express";
+import { linkSchema } from "../../../../models";
+import { stream } from "../../../modules";
+import dayjs from "dayjs";
+import consola from "consola";
 
 class IRouter {
   public async mainController(req: Request, res: Response) {
     try {
       const { id } = req.query;
       const now = dayjs().valueOf();
-      if (!id || typeof id !== 'string') {
+      if (!id || typeof id !== "string") {
         return res.status(400).json({
           code: 400,
-          message: res.__('INVALID_REQUEST')
+          message: res.__("INVALID_REQUEST"),
         });
       }
 
@@ -28,25 +28,25 @@ class IRouter {
               gid: e.gid,
               identifier: e.identifier,
               no_expires: e.no_expires,
-              number_of_uses: e.number_of_uses
+              number_of_uses: e.number_of_uses,
             });
           }
         });
         if (activeLink.length) {
           return res.json({
             code: 200,
-            data: activeLink[activeLink.length - 1]
+            data: activeLink[activeLink.length - 1],
           });
         } else {
           return res.status(400).json({
             code: 400,
-            message: res.__('LINK_EXPIRED')
+            message: res.__("LINK_EXPIRED"),
           });
         }
       } else {
         return res.status(404).json({
           code: 404,
-          message: res.__('LINK_IDENTIFIER_NOT_FOUND')
+          message: res.__("LINK_IDENTIFIER_NOT_FOUND"),
         });
       }
     } catch (err) {
@@ -54,7 +54,7 @@ class IRouter {
       stream.write(err as string);
       return res.status(500).json({
         code: 500,
-        message: 'An error occurred while processing your request.'
+        message: "An error occurred while processing your request.",
       });
     }
   }

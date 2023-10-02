@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 /**
@@ -18,7 +18,7 @@ const schema = new Schema({
   auth_method: { type: Number, required: true },
   number_of_uses: { type: Number, default: 0, required: true },
   issuer: { type: String, required: true },
-  no_expires: { type: Boolean, required: true }
+  no_expires: { type: Boolean, required: true },
 });
 
-export const linkSchema = mongoose.model('link', schema);
+export const linkSchema = mongoose.model("link", schema);

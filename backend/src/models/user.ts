@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 /**
@@ -16,7 +16,7 @@ const schema = new Schema({
   refresh_token: { type: String },
   verify_key: { type: String },
   verify_expiresAt: { type: Number },
-  email_send_date: { type: Number }
+  email_send_date: { type: Number },
 });
 
-export const userSchema = mongoose.model('user', schema);
+export const userSchema = mongoose.model("user", schema);

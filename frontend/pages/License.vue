@@ -5,12 +5,8 @@
         <h4 class="subheading">
           <nuxt-link to="/">홈페이지로 돌아가기</nuxt-link>
         </h4>
-        <h1 class="text-h4 font-weight-thin mb-4">
-          오픈소스 라이선스
-        </h1>
-        <h4 class="subheading">
-          {{ brand }}는 전세계 여러 개발자에 의해 만들어진 멋진 오픈소스 프로젝트들로 구성되어 있어요.
-        </h4>
+        <h1 class="text-h4 font-weight-thin mb-4">오픈소스 라이선스</h1>
+        <h4 class="subheading">{{ brand }}는 전세계 여러 개발자에 의해 만들어진 멋진 오픈소스 프로젝트들로 구성되어 있어요.</h4>
       </div>
     </v-parallax>
     <v-parallax src="/images/Empty.png" height="400">
@@ -21,9 +17,7 @@
         <h1 class="brand-title">
           {{ brand }}
         </h1>
-        <h4 class="subheading grey--text">
-          v{{ ver }}/{{ branch }} ({{ current_commit }})
-        </h4>
+        <h4 class="subheading grey--text">v{{ ver }}/{{ branch }} ({{ current_commit }})</h4>
         <!-- 삭제, 수정 금지 -->
         <h4 class="subheading grey--text">
           <a href="https://github.com/vientorepublic/SecureGate-Lite">이 프로젝트는 오픈소스 입니다!❤️</a>
@@ -33,9 +27,7 @@
     </v-parallax>
     <v-parallax src="/images/Empty.png" height="400">
       <div class="d-flex flex-column fill-height justify-center align-center text-white">
-        <h1 class="text-h4 font-weight-thin mb-4">
-          개발 & 기여자
-        </h1>
+        <h1 class="text-h4 font-weight-thin mb-4">개발 & 기여자</h1>
         <!--삭제, 수정 금지 -->
         <span>Doyeon Kim - 원작자. 백엔드, 프론트엔드 개발</span>
         <span>Hanseung Kim, Jihun Aiden Lee - 로고 디자인, 다국어 지원 검수</span>
@@ -72,25 +64,25 @@
 
 <script>
 export default {
-  name: 'licensePage',
+  name: "licensePage",
   head: {
-    title: 'Licenses'
+    title: "Licenses",
   },
   data() {
     return {
       brand: process.env.BRAND,
       ver: process.env.VER,
       branch: process.env.NUXT_ENV_CURRENT_GIT_BRANCH,
-      current_commit: process.env.NUXT_ENV_CURRENT_GIT_SHA
-    }
-  }
-}
+      current_commit: process.env.NUXT_ENV_CURRENT_GIT_SHA,
+    };
+  },
+};
 </script>
 
 <style scoped>
 .brand-title {
   font-size: 5rem;
-  background: linear-gradient(135deg, #388B87, #6133D4);
+  background: linear-gradient(135deg, #388b87, #6133d4);
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }

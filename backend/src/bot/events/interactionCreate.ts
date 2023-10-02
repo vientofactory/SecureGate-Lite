@@ -13,7 +13,7 @@ const event: BotEvent = {
         if (Date.now() < cooldown) {
           return interaction.reply({
             content: `${Math.floor(Math.abs(Date.now() - cooldown) / 1000)}초 후에 다시 시도해 주세요.`,
-            ephemeral: true
+            ephemeral: true,
           });
         }
         interaction.client.cooldowns.set(`${interaction.commandName}-${interaction.user.username}`, Date.now() + command.cooldown * 1000);
@@ -37,7 +37,7 @@ const event: BotEvent = {
         consola.error(e);
       }
     }
-  }
-}
+  },
+};
 
 export default event;

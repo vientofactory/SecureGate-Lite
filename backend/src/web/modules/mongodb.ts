@@ -1,5 +1,5 @@
-import { connect, connection } from 'mongoose';
-import consola from 'consola';
+import { connect, connection } from "mongoose";
+import consola from "consola";
 
 export class DBManager {
   private readonly DB;
@@ -9,12 +9,12 @@ export class DBManager {
   public connect(address: string) {
     connect(address);
 
-    this.DB.on('error', (e) => {
+    this.DB.on("error", (e) => {
       consola.error(e);
     });
 
-    this.DB.once('open', () => {
-      consola.success('MongoDB Connected!');
+    this.DB.once("open", () => {
+      consola.success("MongoDB Connected!");
     });
   }
 }

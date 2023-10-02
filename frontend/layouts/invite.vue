@@ -6,6 +6,6 @@
 
 <script>
 export default {
-  name: 'InviteLayout'
-}
+  name: "InviteLayout",
+};
 </script>
