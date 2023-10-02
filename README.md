@@ -63,11 +63,10 @@ yarn
 ## 3. 의존성 패키지 설치 (backend)
 ```
 cd backend/
-sh setup.sh
+yarn
 ```
-(Yarn 입력으로 설치가 가능하지만, 언어 파일과 HTML 템플릿 자동 복사를 위해 셋업 스크립트 사용을 추천합니다.)
 
-## 4. 빌드 (frontend)
+## 4. 빌드 (frontend, backend)
 ```
 yarn build
 ```
@@ -81,9 +80,8 @@ cd backend/
 pm2 start
 ```
 
-## 5-2. 서버 시작 (개발 환경)
+## 5-2. 서버 시작 (개발 환경) (frontend, backend)
 ```
-(frontend, backend)
 yarn dev
 ```
 
