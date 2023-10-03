@@ -21,14 +21,17 @@
           {{ error.message }}
         </v-alert>
       </div>
-      <div v-else-if="guilds.length === 0">
+      <div v-else-if="servers.length === 0">
         <v-alert type="info" class="mt-8">
           {{ $t("no-servers") }}
         </v-alert>
       </div>
       <div v-else>
+        <div class="ad-banner">
+          <banner />
+        </div>
         <v-row>
-          <v-col v-for="(data, i) in guilds" :key="i">
+          <v-col v-for="(data, i) in servers" :key="i">
             <v-card width="300px">
               <v-img
                 :src="getGuildIcon(data.id, data.icon)"
@@ -38,7 +41,7 @@
               ></v-img>
               <v-card-title>{{ data.name }}</v-card-title>
               <v-card-actions>
-                <v-btn color="primary" :to="getHome(data.id)" v-if="invited[data.id]">
+                <v-btn color="primary" :to="getHome(data.id)" v-if="invited.includes(data.id)">
                   <v-icon right>mdi-cog</v-icon>
                   {{ $t("manage") }}
                 </v-btn>
@@ -71,7 +74,7 @@ en:
   logged-in-as: "Logged in as {user}"
   goto-home: "Go to homepage"
   logout: "Logout"
-  no-servers: "There are no participating guilds, or there are no guilds with management authority."
+  no-servers: "There are no participating servers, or there are no servers with management authority."
   manage: "Manage"
   invite: "Invite a bot"
 </i18n>
@@ -86,8 +89,9 @@ export default {
     return {
       loggedin: this.$auth.loggedIn,
       loading: false,
-      guilds: [],
-      invited: {},
+      servers: [],
+      invited: [],
+      ids: [],
       error: "",
       redirect_uri: encodeURIComponent(`${process.env.FRONTEND_HOST}/dashboard`),
       client_id: process.env.CLIENT_ID,
@@ -115,23 +119,27 @@ export default {
           let data = [];
           res.data.map((e) => {
             if (this.isAdmin(e.permissions)) {
-              this.isInvited(e.id);
+              //Check guild permissions
               data.push(e);
+              this.ids.push(e.id);
             }
           });
+          this.isInvited(this.ids.join("+"));
           this.loading = false;
-          this.guilds = data;
+          this.servers = data;
         })
         .catch((err) => {
           this.loading = false;
           this.error = err.response.data;
         });
     },
-    isInvited: function (id) {
+    isInvited: function (ids) {
       this.$axios
-        .get(`/api/invited?id=${id}`, { progress: false })
+        .post(`/api/invited`, {
+          ids,
+        })
         .then((res) => {
-          this.invited = Object.assign({}, this.invited, { [id]: res.data.invited });
+          this.invited = res.data.data.invited;
         })
         .catch((_err) => {});
     },

@@ -7,24 +7,40 @@ class IRouter {
   public readonly router: Router;
   constructor() {
     this.router = Router();
-    this.router.get("/", this.mainController);
+    this.router.post("/", this.mainController);
   }
   private async mainController(req: Request, res: Response) {
     try {
-      const { id } = req.query;
-      if (!id || typeof id !== "string") {
+      const { ids } = req.body;
+      if (!ids || typeof ids !== "string") {
         return res.status(400).json({
           code: 400,
           message: res.__("INVALID_REQUEST"),
         });
       }
 
-      const invited = client.guilds.cache.map((e) => e.id).includes(id);
-      return res.json({
-        code: 200,
-        id: id,
-        invited,
-      });
+      const data = ids.split("+");
+      if (data.length) {
+        let invited: any[] = [];
+        let notInvited: any[] = [];
+        data.forEach((id) => {
+          let check = client.guilds.cache.map((e) => e.id).includes(id);
+          if (check) invited.push(id);
+          else notInvited.push(id);
+        });
+        return res.json({
+          code: 200,
+          data: {
+            invited,
+            notInvited,
+          },
+        });
+      } else {
+        return res.status(400).json({
+          code: 400,
+          message: res.__("INVALID_REQUEST"),
+        });
+      }
     } catch (err) {
       consola.error(err);
       stream.write(err as string);
