@@ -11,6 +11,13 @@ declare global {
   }
 }
 
+export interface join_param {
+  token: string;
+  guild_id: string;
+  user_id: string;
+  role?: string;
+}
+
 export interface email_param {
   verify?: string;
   brand: string;

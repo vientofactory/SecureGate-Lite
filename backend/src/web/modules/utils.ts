@@ -1,5 +1,6 @@
 import { linkSchema } from "../../models";
 import axios, { isAxiosError, ResponseType } from "axios";
+import { join_param } from "../types";
 import dayjs from "dayjs";
 import fs from "fs";
 
@@ -10,13 +11,13 @@ const urlPattern = new RegExp(/(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(
 const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
 class utility {
-  public async joinGuild(token: string, gid: string, uid: string, role: string) {
+  public async joinGuild(param: join_param) {
     try {
       const res = await axios.put(
-        `https://discordapp.com/api/guilds/${gid}/members/${uid}`,
+        `https://discordapp.com/api/guilds/${param.guild_id}/members/${param.user_id}`,
         {
-          access_token: token,
-          roles: role ? [role] : null,
+          access_token: param.token,
+          roles: param.role ? [param.role] : null,
         },
         {
           headers: {
