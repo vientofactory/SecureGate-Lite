@@ -27,9 +27,6 @@
         </v-alert>
       </div>
       <div v-else>
-        <v-alert type="info">
-          {{ $t("top-tip") }}
-        </v-alert>
         <v-row>
           <v-col>
             <v-card class="mb-5 mx-auto">
@@ -53,7 +50,17 @@
                 </v-alert>
               </v-card-text>
               <form
-                @submit.prevent="submit(guild.id, selected_role, selected_method, custom_link_input, selected_expires, question_input, answer_input)"
+                @submit.prevent="
+                  createLink({
+                    id: link_input,
+                    gid: guild.id,
+                    role: selected_role,
+                    method: selected_method,
+                    expire: selected_expires,
+                    question: question_input,
+                    answer: answer_input,
+                  })
+                "
               >
                 <v-card-text>
                   {{ $t("auth-method") }}
@@ -85,9 +92,7 @@
                 </v-card-text>
                 <!-- Custom Link -->
                 <v-card-text v-if="custom_link">
-                  <b>
-                    {{ $t("custom-link-desc") }} </b
-                  ><br />
+                  <b> {{ $t("custom-link-desc") }} </b><br />
                   <b>
                     {{ $t("link-format") }}
                   </b>
@@ -199,7 +204,6 @@ ko:
   goto-select: "서버 목록으로"
   logout: "로그아웃"
   param-missed: "필수 인자가 누락되었습니다."
-  top-tip: "일반 사용자가 서버의 초대 링크를 생성할 수 없도록 권한을 적절히 변경해야 합니다."
   server-id: "서버 식별자"
   active-link: "활성 링크"
   bot-add-date: "봇 추가 일자"
@@ -248,7 +252,6 @@ en:
   goto-select: "Go to guild list"
   logout: "Logout"
   param-missed: "A required argument is missing."
-  top-tip: "You will need to change the permissions appropriately to prevent regular users from creating invitation links to the guild."
   server-id: "Server ID"
   active-link: "Active links"
   bot-add-date: "Bot addition date"
@@ -398,31 +401,28 @@ export default {
     },
   },
   methods: {
-    submit: function (gid, role, method, custom_id, expire, question, answer) {
-      this.createLink(gid, role, method, custom_id, expire, question, answer);
-    },
-    createLink: function (gid, role, method, id, expire, question, answer) {
-      if (!this.selected_method || !this.selected_expires) {
+    createLink: function (param) {
+      if (!param.method || !param.expire) {
         this.dialog_create_error = true;
         this.create_error = this.$t("select-required");
       } else {
         this.creating = true;
         this.$axios
           .post("/api/link/create", {
-            id,
-            gid,
-            role,
-            method,
-            expire,
-            question,
-            answer,
+            id: param.id,
+            gid: param.gid,
+            role: param.role,
+            method: param.method,
+            expire: param.expire,
+            question: param.question,
+            answer: param.answer,
           })
           .then((res) => {
             this.creating = false;
             this.link_get_error = "";
             this.alert = true;
             this.create_result = res.data.message;
-            this.getLinks(gid);
+            this.getLinks(param.gid);
           })
           .catch((err) => {
             this.creating = false;
