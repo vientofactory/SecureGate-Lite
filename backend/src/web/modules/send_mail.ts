@@ -1,5 +1,5 @@
 import { Transporter, createTransport } from "nodemailer";
-import { email_param, notify_locale_param, verify_locale_param } from "../types";
+import { IEmail, INotifyLocale, IVerifyLocale } from "../types";
 import { utils } from "./utils";
 import { stream } from "./logger";
 import transport from "nodemailer-smtp-transport";
@@ -28,7 +28,7 @@ export class mail {
       })
     );
   }
-  public async sendVerifyMail(param: email_param, locale: verify_locale_param) {
+  public async sendVerifyMail(param: IEmail, locale: IVerifyLocale) {
     const template = process.env.VERIFY_HTML_TEMPLATE;
     utils.readHTML(path.join(__dirname, "templates", template), (err: any, html: string) => {
       if (err) {
@@ -62,7 +62,7 @@ export class mail {
       });
     });
   }
-  public async sendNotifyMail(param: email_param, locale: notify_locale_param) {
+  public async sendNotifyMail(param: IEmail, locale: INotifyLocale) {
     const template = process.env.NOTIFY_HTML_TEMPLATE;
     utils.readHTML(path.join(__dirname, "templates", template), (err: any, html: string) => {
       if (err) {

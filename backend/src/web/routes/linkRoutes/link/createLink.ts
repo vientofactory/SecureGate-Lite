@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { utils, stream } from "../../../modules";
 import { guildSchema, linkSchema } from "../../../../models";
-import { role } from "../../../types";
+import { IRole } from "../../../types";
 import dayjs from "dayjs";
 import consola from "consola";
 
@@ -85,7 +85,7 @@ class IRouter {
                 const discordUser = await utils.getUser(token);
                 if (role) {
                   let roles: any[] = [];
-                  guild.data.roles.forEach((e: role) => {
+                  guild.data.roles.forEach((e: IRole) => {
                     if (!e.managed && e.name !== "@everyone") roles.push(e.id);
                   });
                   const filter = roles.find((e) => e === role);
@@ -155,7 +155,7 @@ class IRouter {
                 const discordUser = await utils.getUser(token);
                 if (role) {
                   let roles: any[] = [];
-                  guild.data.roles.forEach((e: role) => {
+                  guild.data.roles.forEach((e: IRole) => {
                     if (!e.managed && e.name !== "@everyone") roles.push(e.id);
                   });
                   const filter = roles.find((e) => e === role);

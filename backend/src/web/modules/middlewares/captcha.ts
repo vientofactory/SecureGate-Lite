@@ -1,25 +1,26 @@
 import axios from "axios";
 import consola from "consola";
-
-let isDev: boolean;
-if (process.env.NODE_ENV === "production") isDev = false;
-if (process.env.NODE_ENV === "development") isDev = true;
+import { ICaptchaResponse } from "../../types";
 
 const secretKey = process.env.RECAPTCHA_SECRET;
 
 class recaptcha {
-  public async verify(token: string, ip: string): Promise<boolean> {
+  public async verify(token: string, ip: string) {
+    const params = new URLSearchParams();
+    params.append("secret", secretKey);
+    params.append("response", token);
+    params.append("remoteip", ip);
     return axios
-      .get(`https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${token}&remoteip=${ip}`)
-      .then((response) => {
-        if (!response.data.success) {
-          return false;
-        }
-        return true;
+      .get("https://www.google.com/recaptcha/api/siteverify", { params })
+      .then((res: ICaptchaResponse) => {
+        return {
+          success: res.data.success,
+          challenge_ts: res.data.challenge_ts,
+        };
       })
       .catch((err) => {
         consola.error(err);
-        return false;
+        return null;
       });
   }
 }

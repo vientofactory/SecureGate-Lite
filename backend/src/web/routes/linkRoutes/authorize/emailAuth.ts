@@ -32,7 +32,7 @@ class IRouter {
               if (link.expiresAt > now || link.no_expires) {
                 const token = accessToken.replace("Bearer ", "");
                 const discordUser = await utils.getUser(token);
-                const invite = await utils.joinGuild({
+                const invite = await utils.addGuildMember({
                   token,
                   guild_id: link.gid,
                   user_id: discordUser?.data.id,

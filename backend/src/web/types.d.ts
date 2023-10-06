@@ -3,6 +3,7 @@ declare global {
     interface ProcessEnv {
       BRAND: string;
       FRONTEND_HOST: string;
+      RECAPTCHA_SECRET: string;
       VERIFY_HTML_TEMPLATE: string;
       NOTIFY_HTML_TEMPLATE: string;
       MONGODB_URI: string;
@@ -11,14 +12,14 @@ declare global {
   }
 }
 
-export interface join_param {
+export interface IAddGuildMember {
   token: string;
   guild_id: string;
   user_id: string;
   role?: string;
 }
 
-export interface email_param {
+export interface IEmail {
   verify?: string;
   brand: string;
   subject: string;
@@ -26,7 +27,7 @@ export interface email_param {
   link?: string;
 }
 
-export interface verify_locale_param {
+export interface IVerifyLocale {
   header: string;
   footer: string;
   user: string;
@@ -35,7 +36,7 @@ export interface verify_locale_param {
   ignore: string;
 }
 
-export interface notify_locale_param {
+export interface INotifyLocale {
   header: string;
   footer: string;
   user: string;
@@ -44,8 +45,15 @@ export interface notify_locale_param {
   from: string;
 }
 
-export interface role {
+export interface IRole {
   managed: boolean;
   name: string;
   id: string;
+}
+
+export interface ICaptchaResponse {
+  data: {
+    success: boolean;
+    challenge_ts: string;
+  };
 }

@@ -1,6 +1,6 @@
 import { linkSchema } from "../../models";
 import axios, { isAxiosError, ResponseType } from "axios";
-import { join_param } from "../types";
+import { IAddGuildMember } from "../types";
 import dayjs from "dayjs";
 import fs from "fs";
 
@@ -11,7 +11,7 @@ const urlPattern = new RegExp(/(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(
 const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
 class utility {
-  public async joinGuild(param: join_param) {
+  public async addGuildMember(param: IAddGuildMember) {
     try {
       const res = await axios.put(
         `https://discordapp.com/api/guilds/${param.guild_id}/members/${param.user_id}`,

@@ -52,7 +52,7 @@ class IRouter {
                   message: res.__("CAPTCHA_ERROR"),
                 });
               }
-              const invite = await utils.joinGuild({
+              const invite = await utils.addGuildMember({
                 token,
                 guild_id: link.gid,
                 user_id: discordUser?.data.id,
