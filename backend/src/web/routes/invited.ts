@@ -22,17 +22,14 @@ class IRouter {
       const data = ids.split("+");
       if (data.length) {
         let invited: any[] = [];
-        let notInvited: any[] = [];
         data.forEach((id) => {
           let check = client.guilds.cache.map((e) => e.id).includes(id);
           if (check) invited.push(id);
-          else notInvited.push(id);
         });
         return res.json({
           code: 200,
           data: {
             invited,
-            notInvited,
           },
         });
       } else {
