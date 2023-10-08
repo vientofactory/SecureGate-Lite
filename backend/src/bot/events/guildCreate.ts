@@ -13,7 +13,7 @@ const event: BotEvent = {
     const check = await guildSchema.findOne({ id: guild.id });
     if (!check) {
       const data = new guildSchema({
-        id: guild.id,
+        gid: guild.id,
         owner: guild.ownerId,
         joinedAt: now,
       });

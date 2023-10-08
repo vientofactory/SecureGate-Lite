@@ -8,10 +8,10 @@ const webhookURL = process.env.LOG_WEBHOOK;
 const event: BotEvent = {
   name: "guildDelete",
   async execute(guild: Guild) {
-    const checkGuild = await guildSchema.findOne({ id: guild.id });
+    const checkGuild = await guildSchema.findOne({ gid: guild.id });
     const checkLinks = await linkSchema.find({ gid: guild.id });
     if (checkGuild) {
-      await guildSchema.deleteOne({ id: guild.id });
+      await guildSchema.deleteOne({ gid: guild.id });
       if (checkLinks.length) {
         await linkSchema.deleteMany({ gid: guild.id });
       }
