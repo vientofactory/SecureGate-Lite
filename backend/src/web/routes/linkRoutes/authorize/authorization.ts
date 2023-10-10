@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { captcha } from "../../../modules/middlewares";
 import { utils, stream, mail } from "../../../modules";
 import { userSchema, linkSchema } from "../../../../models";
-import client from "../../../../bot";
+import { client } from "../../../../bot";
 import dayjs from "dayjs";
 import consola from "consola";
 

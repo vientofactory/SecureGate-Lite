@@ -4,6 +4,7 @@
  */
 
 import "dotenv/config";
+import { BotClient } from "./bot";
 import { Server } from "./web";
 import { normalizePort } from "./web/modules";
 import consola from "consola";
@@ -16,4 +17,5 @@ else isDev = false;
 const port = normalizePort(process.env.PORT);
 
 consola.info(`isDev: ${isDev}`);
+new BotClient(process.env.BOT_TOKEN).start();
 new Server(port, isDev).start();

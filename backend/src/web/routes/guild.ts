@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 import { stream } from "../modules";
 import { utils } from "../modules";
 import { IRole } from "../types";
-import client from "../../bot";
+import { client } from "../../bot";
 import consola from "consola";
 
 class IRouter {

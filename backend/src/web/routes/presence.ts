@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import client from "../../bot";
+import { client } from "../../bot";
 import consola from "consola";
 
 class IRouter {
