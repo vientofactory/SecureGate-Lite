@@ -96,14 +96,7 @@
                   <b>
                     {{ $t("link-format") }}
                   </b>
-                  <v-text-field
-                    type="text"
-                    :label="$t('invite-id')"
-                    @change="formValidation(custom_link_input)"
-                    v-model.trim="custom_link_input"
-                    :disabled="creating"
-                    required
-                  ></v-text-field>
+                  <v-text-field type="text" :label="$t('invite-id')" v-model="link_input" :disabled="creating" required></v-text-field>
                   <span v-if="validateMessage" :class="{ 'orange--text': warnMessage, 'green--text': !warnMessage }">{{ validateMessage }}</span>
                 </v-card-text>
                 <v-card-text>
@@ -363,7 +356,7 @@ export default {
           disabled: false,
         },
       ],
-      custom_link_input: "",
+      link_input: "",
       create_result: "",
       create_error: "",
       delete_result: "",
@@ -374,6 +367,7 @@ export default {
       link_get_error: "",
       error: "",
       create_limit: 0,
+      debounceTimeout: null,
     };
   },
   created() {
@@ -399,8 +393,23 @@ export default {
         this.expires[6].disabled = false;
       }
     },
+    link_input: function () {
+      if (this.link_input) {
+        this.validateMessage = this.$t("checking");
+        this.debounceValidation(this.link_input);
+      } else {
+        this.warnMessage = false;
+        this.validateMessage = "";
+      }
+    },
   },
   methods: {
+    debounceValidation: function (id) {
+      if (this.debounceTimeout) clearTimeout(this.debounceTimeout);
+      this.debounceTimeout = setTimeout(() => {
+        this.formValidation(id);
+      }, 500);
+    },
     createLink: function (param) {
       if (!param.method || !param.expire) {
         this.dialog_create_error = true;
@@ -461,22 +470,20 @@ export default {
       }
     },
     formValidation: function (id) {
-      if (id) {
-        this.warnMessage = false;
-        this.validateMessage = this.$t("checking");
-        this.$axios
-          .get(`/api/link/create/custom/validation?id=${id}`, { progress: false })
-          .then((res) => {
-            this.validateMessage = res.data.message;
-          })
-          .catch((err) => {
-            this.warnMessage = true;
-            this.validateMessage = err.response.data.message;
-          });
-      } else {
-        this.warnMessage = false;
-        this.validateMessage = "";
-      }
+      this.$axios
+        .get("/api/link/create/custom/validation", {
+          params: {
+            id,
+          },
+          progress: false,
+        })
+        .then((res) => {
+          this.validateMessage = res.data.message;
+        })
+        .catch((err) => {
+          this.warnMessage = true;
+          this.validateMessage = err.response.data.message;
+        });
     },
     deleteLink: function (id) {
       this.deleting = true;
