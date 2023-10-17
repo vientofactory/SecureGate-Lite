@@ -13,7 +13,6 @@ const schema = new Schema({
   email: { type: String, required: true },
   permission: { type: Number, default: 3, required: true },
   createdAt: { type: Number, required: true },
-  refresh_token: { type: String },
   verify_key: { type: String },
   verify_expiresAt: { type: Number },
   email_send_date: { type: Number },

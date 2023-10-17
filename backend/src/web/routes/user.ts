@@ -20,15 +20,15 @@ class IRouter {
 
       const token = accessToken.replace("Bearer ", "");
       const user = await utils.getUser(token);
-      if (user && user.status === 200) {
+      if (user) {
         return res.json({
           code: 200,
           data: {
-            id: user.data.id,
-            username: user.data.username,
-            avatar: user.data.avatar,
-            global_name: user.data.global_name,
-            email: user.data.email,
+            id: user.id,
+            username: user.username,
+            avatar: user.avatar,
+            global_name: user.global_name,
+            email: user.email,
           },
         });
       } else {

@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
-import { stream } from "../../../modules";
 import { linkSchema } from "../../../../models";
 import dayjs from "dayjs";
 import consola from "consola";
 
 const maxInvites = Number(process.env.MAX_ALLOWED_INVITES);
 
-class IRouter {
+class controller {
   public async mainController(req: Request, res: Response) {
     try {
       const { id } = req.query;
@@ -20,19 +19,24 @@ class IRouter {
 
       const links = await linkSchema.find({ gid: id });
       if (links.length) {
-        let data: any[] = [];
-        links.forEach((e) => {
-          if (e.expiresAt > now || e.no_expires)
-            data.push({
-              auth_method: e.auth_method,
-              createdAt: e.createdAt,
-              expiresAt: e.expiresAt,
-              gid: e.gid,
-              identifier: e.identifier,
-              no_expires: e.no_expires,
-              number_of_uses: e.number_of_uses,
+        let data = [];
+        for (let i = 0; i < links.length; i++) {
+          if (links[i].expiresAt < now && !links[i].no_expires) {
+            linkSchema.findByIdAndDelete(links[i]._id).exec(); //Delete expired links
+          } else {
+            let dataObj = {};
+            Object.assign(dataObj, {
+              auth_method: links[i].auth_method,
+              createdAt: links[i].createdAt,
+              expiresAt: links[i].expiresAt,
+              gid: links[i].gid,
+              identifier: links[i].identifier,
+              no_expires: links[i].no_expires,
+              number_of_uses: links[i].number_of_uses,
             });
-        });
+            data.push(dataObj);
+          }
+        }
         if (data.length) {
           return res.json({
             code: 200,
@@ -55,7 +59,6 @@ class IRouter {
       }
     } catch (err) {
       consola.error(err);
-      stream.write(err as string);
       return res.status(500).json({
         code: 500,
         message: "An error occurred while processing your request.",
@@ -64,4 +67,4 @@ class IRouter {
   }
 }
 
-export const getLinks = new IRouter().mainController;
+export const getLinks = new controller().mainController;

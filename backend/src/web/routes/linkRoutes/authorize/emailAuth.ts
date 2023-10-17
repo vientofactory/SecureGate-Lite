@@ -3,6 +3,7 @@ import { utils, stream } from "../../../modules";
 import { userSchema, linkSchema } from "../../../../models";
 import dayjs from "dayjs";
 import consola from "consola";
+import { IDiscordUser } from "../../../types";
 
 class IRouter {
   public async mainController(req: Request, res: Response) {
@@ -22,6 +23,7 @@ class IRouter {
        * 1 - Link Identifier
        * 2 - Random Generated
        */
+      const discordUser = res.locals.user as IDiscordUser;
       const data = Buffer.from(identifier, "base64").toString("utf8").split("+");
       if (data && data.length === 3) {
         const localuser = await userSchema.findOne({ verify_key: identifier });
@@ -31,11 +33,10 @@ class IRouter {
             if (link) {
               if (link.expiresAt > now || link.no_expires) {
                 const token = accessToken.replace("Bearer ", "");
-                const discordUser = await utils.getUser(token);
                 const invite = await utils.addGuildMember({
                   token,
                   guild_id: link.gid,
-                  user_id: discordUser?.data.id,
+                  user_id: discordUser.id,
                   role: link.role,
                 });
                 switch (invite) {

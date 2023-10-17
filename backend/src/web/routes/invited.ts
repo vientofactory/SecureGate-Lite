@@ -21,7 +21,7 @@ class IRouter {
 
       const data = ids.split("+");
       if (data.length) {
-        let invited: any[] = [];
+        let invited: string[] = [];
         data.forEach((id) => {
           let check = client.guilds.cache.map((e) => e.id).includes(id);
           if (check) invited.push(id);

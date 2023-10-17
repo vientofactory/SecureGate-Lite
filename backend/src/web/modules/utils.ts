@@ -1,6 +1,6 @@
 import { linkSchema } from "../../models";
 import axios, { isAxiosError, ResponseType } from "axios";
-import { IAddGuildMember } from "../types";
+import { IAddGuildMember, IDiscordUser } from "../types";
 import dayjs from "dayjs";
 import fs from "fs";
 
@@ -48,80 +48,18 @@ class utility {
     }
   }
   public async getUser(token: string) {
-    try {
-      const res = await axios.get("https://discordapp.com/api/users/@me", {
+    return axios
+      .get("https://discordapp.com/api/users/@me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+      })
+      .then((res) => {
+        return res.data as IDiscordUser;
+      })
+      .catch(() => {
+        return null;
       });
-      return {
-        data: res.data,
-        status: res.status,
-      };
-    } catch (err) {
-      if (isAxiosError<ResponseType, any>(err)) {
-        if (err.response) {
-          return {
-            data: err.response.data,
-            status: err.status,
-          };
-        } else {
-          return null;
-        }
-      }
-    }
-  }
-  public async getGuild(id: string) {
-    try {
-      const res = await axios.get(`https://discordapp.com/api/guilds/${id}`, {
-        headers: {
-          Authorization: `Bot ${botToken}`,
-        },
-      });
-      return {
-        data: res.data,
-        status: res.status,
-      };
-    } catch (err) {
-      if (isAxiosError<ResponseType, any>(err)) {
-        if (err.response) {
-          return {
-            data: err.response.data,
-            status: err.status,
-          };
-        } else {
-          return null;
-        }
-      }
-    }
-  }
-  /**
-   * @deprecated Server => Client
-   */
-  public async getGuildsByUser(token: string) {
-    try {
-      const res = await axios.get(`https://discord.com/api/users/@me/guilds`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return res.data;
-    } catch (err) {
-      return null;
-    }
-  }
-  public async getGuildUserPermissions(token: string, id: string) {
-    try {
-      const res = await axios.get(`https://discord.com/api/users/@me/guilds`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const filter = res.data.find((e: any) => e.id === id);
-      return filter.permissions;
-    } catch (err) {
-      return false;
-    }
   }
   public isAdmin(permission: number) {
     return (permission % 16) - 8 >= 0;

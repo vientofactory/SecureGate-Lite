@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
-import { utils, stream } from "../../../modules";
+import { utils } from "../../../modules";
 import { linkSchema } from "../../../../models";
+import { client } from "../../../../bot";
+import { IDiscordUser } from "../../../types";
 import consola from "consola";
 
 class IRouter {
@@ -15,29 +17,22 @@ class IRouter {
         });
       }
 
+      const userData = res.locals.user as IDiscordUser;
       const check = await linkSchema.findOne({ identifier: id });
       if (check) {
-        const guild = await utils.getGuild(check.gid);
-        if (guild && guild.status === 200) {
-          const token = accessToken.replace("Bearer ", "");
-          const permissions = await utils.getGuildUserPermissions(token, guild.data.id);
-          if (permissions) {
-            if (utils.isAdmin(permissions)) {
-              await linkSchema.deleteMany({ identifier: id });
-              return res.json({
-                code: 200,
-                message: res.__("LINK_DELETED"),
-              });
-            } else {
-              return res.status(403).json({
-                code: 403,
-                message: res.__("INVALID_ENTRY"),
-              });
-            }
+        const guild = client.guilds.cache.get(check.gid);
+        if (guild) {
+          const user = guild.members.cache.get(userData.id);
+          if (user && utils.isAdmin(parseInt(user.permissions.toJSON()))) {
+            linkSchema.deleteOne({ identifier: id }).exec();
+            return res.json({
+              code: 200,
+              message: res.__("LINK_DELETED"),
+            });
           } else {
-            return res.status(500).json({
-              code: 500,
-              message: res.__("PERMISSION_CHECK_FAILED"),
+            return res.status(403).json({
+              code: 403,
+              message: res.__("INVALID_ENTRY"),
             });
           }
         } else {
@@ -54,7 +49,6 @@ class IRouter {
       }
     } catch (err) {
       consola.error(err);
-      stream.write(err as string);
       return res.status(500).json({
         code: 500,
         message: "An error occurred while processing your request.",

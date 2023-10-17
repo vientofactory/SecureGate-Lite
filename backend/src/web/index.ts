@@ -60,10 +60,7 @@ export class Server {
 
     //Default 404 Route.
     this.app.all("*", (req: Request, res: Response) => {
-      return res.status(404).json({
-        code: 404,
-        message: "Not found.",
-      });
+      return res.sendStatus(404);
     });
   }
   public start() {

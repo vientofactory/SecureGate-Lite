@@ -1,40 +1,44 @@
 import { Request, Response, NextFunction } from "express";
 import { userSchema } from "../../../models";
 import { utils } from "../utils";
+import dayjs from "dayjs";
 import consola from "consola";
 
 class middleware {
   public async mainController(req: Request, res: Response, next: NextFunction) {
     try {
       const accessToken = req.cookies["auth._token.discord"];
-      const refreshToken = req.cookies["auth._refresh_token.discord"];
-      if (!accessToken || typeof accessToken !== "string" || !refreshToken || typeof refreshToken !== "string") {
+      const now = dayjs().valueOf();
+      if (!accessToken || typeof accessToken !== "string") {
         return res.status(400).json({
           code: 400,
-          message: "Parameter is not valid.",
+          message: "OAuth2 cookies not found.",
         });
       }
 
       const user = await utils.getUser(accessToken.replace("Bearer ", ""));
-      if (user && user.status === 200) {
-        const localUser = await userSchema.findOne({ id: user.data.id });
+      if (user) {
+        const localUser = await userSchema.findOne({ id: user.id });
         if (localUser) {
-          if (localUser.refresh_token !== refreshToken) {
-            await localUser.updateOne({
-              $set: {
-                refresh_token: refreshToken,
-              },
-            });
+          if (localUser.email !== user.email) {
+            localUser
+              .updateOne({
+                $set: {
+                  email: user.email,
+                },
+              })
+              .exec();
           }
         } else {
           const data = new userSchema({
-            id: user.data.id,
-            email: user.data.email,
-            createdAt: new Date().getTime(),
-            refresh_token: refreshToken,
+            id: user.id,
+            email: user.email,
+            createdAt: now,
           });
           data.save();
         }
+        // Pass user data to next router.
+        res.locals.user = user;
         return next();
       } else {
         return res.status(401).json({

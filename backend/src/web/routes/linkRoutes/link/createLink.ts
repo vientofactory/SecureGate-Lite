@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { utils, stream } from "../../../modules";
+import { utils } from "../../../modules";
 import { guildSchema, linkSchema } from "../../../../models";
-import { IRole } from "../../../types";
+import { client } from "../../../../bot";
+import { IDiscordUser } from "../../../types";
 import dayjs from "dayjs";
 import consola from "consola";
 
@@ -34,101 +35,68 @@ class IRouter {
         });
       }
 
-      const guild = await utils.getGuild(gid);
-      if (guild && guild.status === 200) {
-        const guildDB = await guildSchema.findOne({ gid: guild.data.id });
+      const userData = res.locals.user as IDiscordUser;
+      const guild = client.guilds.cache.get(gid);
+      if (guild) {
+        const guildDB = await guildSchema.findOne({ gid: guild.id });
         if (guildDB) {
-          const token = accessToken.replace("Bearer ", "");
-          const permissions = await utils.getGuildUserPermissions(token, gid);
-          if (permissions) {
-            if (utils.isAdmin(permissions)) {
-              let links = [];
-              const checkLinks = await linkSchema.find({ gid: guildDB.gid });
-              checkLinks.forEach((e) => {
-                if (e.expiresAt > now || e.no_expires) links.push(e);
+          const user = guild.members.cache.get(userData.id);
+          if (user && utils.isAdmin(parseInt(user.permissions.toJSON()))) {
+            let links = [];
+            const checkLinks = await linkSchema.find({ gid: guildDB.gid });
+            checkLinks.forEach((e) => {
+              if (e.expiresAt > now || e.no_expires) links.push(e);
+            });
+            if (links.length >= maxInvites) {
+              return res.status(400).json({
+                code: 400,
+                message: res.__("LINK_CREATE_LIMIT", { name: String(maxInvites) }),
               });
-              if (links.length >= maxInvites) {
+            }
+            const expireTime = utils.getExpires(expire);
+            if (id && typeof id === "string") {
+              if (!utils.validateLink(id)) {
                 return res.status(400).json({
                   code: 400,
-                  message: res.__("LINK_CREATE_LIMIT", { name: String(maxInvites) }),
+                  message: res.__("IDENTIFIER_FORMAT_ERROR"),
                 });
               }
-              const expireTime = utils.getExpires(expire);
-              if (id && typeof id === "string") {
-                if (!utils.validateLink(id)) {
-                  return res.status(400).json({
-                    code: 400,
-                    message: res.__("IDENTIFIER_FORMAT_ERROR"),
-                  });
-                }
-                if (resolved.includes(id)) {
-                  return res.status(400).json({
-                    code: 400,
-                    message: res.__("SYSTEM_RESOLVED"),
-                  });
-                }
-                if (expire === "no_expires") {
-                  return res.status(400).json({
-                    code: 400,
-                    message: res.__("NO_EXPIRES_NOT_ALLOWED"),
-                  });
-                }
+              if (resolved.includes(id)) {
+                return res.status(400).json({
+                  code: 400,
+                  message: res.__("SYSTEM_RESOLVED"),
+                });
+              }
+              if (expire === "no_expires") {
+                return res.status(400).json({
+                  code: 400,
+                  message: res.__("NO_EXPIRES_NOT_ALLOWED"),
+                });
+              }
 
-                const check = await linkSchema.findOne({ identifier: id });
-                if (check) {
-                  return res.status(400).json({
-                    code: 400,
-                    message: res.__("IDENTIFIER_ALREADY_EXISTS"),
-                  });
-                }
+              const check = await linkSchema.findOne({ identifier: id });
+              if (check) {
+                return res.status(400).json({
+                  code: 400,
+                  message: res.__("IDENTIFIER_ALREADY_EXISTS"),
+                });
+              }
 
-                const discordUser = await utils.getUser(token);
-                if (role) {
-                  let roles: any[] = [];
-                  guild.data.roles.forEach((e: IRole) => {
-                    if (!e.managed && e.name !== "@everyone") roles.push(e.id);
-                  });
-                  const filter = roles.find((e) => e === role);
-                  if (filter) {
-                    const newLink = new linkSchema({
-                      identifier: id,
-                      gid: guild.data.id,
-                      role: filter,
-                      createdAt: now,
-                      expiresAt: expireTime,
-                      auth_method: Number(method),
-                      issuer: discordUser?.data.id,
-                      no_expires: false,
-                    });
-                    newLink
-                      .save()
-                      .then(() => {
-                        return res.json({
-                          code: 200,
-                          message: res.__("LINK_CREATED"),
-                        });
-                      })
-                      .catch((e) => {
-                        return res.status(500).json({
-                          code: 500,
-                          message: e,
-                        });
-                      });
-                  } else {
-                    return res.status(404).json({
-                      code: 404,
-                      message: res.__("ROLE_NOT_FOUND"),
-                    });
-                  }
-                } else {
+              if (role) {
+                let roles: string[] = [];
+                guild.roles.cache.forEach((e) => {
+                  if (e.guild.id === gid && !e.managed && e.name !== "@everyone") roles.push(e.id);
+                });
+                const filter = roles.find((e) => e === role);
+                if (filter) {
                   const newLink = new linkSchema({
                     identifier: id,
-                    gid: guild.data.id,
-                    role: null,
+                    gid: guild.id,
+                    role: filter,
                     createdAt: now,
                     expiresAt: expireTime,
                     auth_method: Number(method),
-                    issuer: discordUser?.data.id,
+                    issuer: userData.id,
                     no_expires: false,
                   });
                   newLink
@@ -145,62 +113,59 @@ class IRouter {
                         message: e,
                       });
                     });
+                } else {
+                  return res.status(404).json({
+                    code: 404,
+                    message: res.__("ROLE_NOT_FOUND"),
+                  });
                 }
               } else {
-                let identifier = utils.genRandomString(8);
-                //Check availability
-                while (!utils.checkLink(identifier)) {
-                  identifier = utils.genRandomString(8);
-                }
-                const discordUser = await utils.getUser(token);
-                if (role) {
-                  let roles: any[] = [];
-                  guild.data.roles.forEach((e: IRole) => {
-                    if (!e.managed && e.name !== "@everyone") roles.push(e.id);
+                const newLink = new linkSchema({
+                  identifier: id,
+                  gid: guild.id,
+                  role: null,
+                  createdAt: now,
+                  expiresAt: expireTime,
+                  auth_method: Number(method),
+                  issuer: userData.id,
+                  no_expires: false,
+                });
+                newLink
+                  .save()
+                  .then(() => {
+                    return res.json({
+                      code: 200,
+                      message: res.__("LINK_CREATED"),
+                    });
+                  })
+                  .catch((e) => {
+                    return res.status(500).json({
+                      code: 500,
+                      message: e,
+                    });
                   });
-                  const filter = roles.find((e) => e === role);
-                  if (filter) {
-                    //Selected role
-                    const newLink = new linkSchema({
-                      identifier: identifier,
-                      gid: guild.data.id,
-                      role: filter,
-                      createdAt: now,
-                      expiresAt: expireTime ? expireTime : 0,
-                      auth_method: Number(method),
-                      issuer: discordUser?.data.id,
-                      no_expires: expireTime ? false : true,
-                    });
-                    newLink
-                      .save()
-                      .then(() => {
-                        return res.json({
-                          code: 200,
-                          message: res.__("LINK_CREATED"),
-                        });
-                      })
-                      .catch((e) => {
-                        return res.status(500).json({
-                          code: 500,
-                          message: e,
-                        });
-                      });
-                  } else {
-                    return res.status(404).json({
-                      code: 404,
-                      message: res.__("ROLE_NOT_FOUND"),
-                    });
-                  }
-                } else {
-                  //Without selected role
+              }
+            } else {
+              let identifier = utils.genRandomString(8);
+              //Check availability
+              while (!utils.checkLink(identifier)) {
+                identifier = utils.genRandomString(8);
+              }
+              if (role) {
+                let roles: string[] = [];
+                guild.roles.cache.forEach((e) => {
+                  if (e.guild.id === gid && !e.managed && e.name !== "@everyone") roles.push(e.id);
+                });
+                const filter = roles.find((e) => e === role);
+                if (filter) {
                   const newLink = new linkSchema({
                     identifier: identifier,
-                    gid: guild.data.id,
-                    role: null,
+                    gid: guild.id,
+                    role: filter,
                     createdAt: now,
                     expiresAt: expireTime ? expireTime : 0,
                     auth_method: Number(method),
-                    issuer: discordUser?.data.id,
+                    issuer: userData.id,
                     no_expires: expireTime ? false : true,
                   });
                   newLink
@@ -217,18 +182,43 @@ class IRouter {
                         message: e,
                       });
                     });
+                } else {
+                  return res.status(404).json({
+                    code: 404,
+                    message: res.__("ROLE_NOT_FOUND"),
+                  });
                 }
+              } else {
+                const newLink = new linkSchema({
+                  identifier: identifier,
+                  gid: guild.id,
+                  role: null,
+                  createdAt: now,
+                  expiresAt: expireTime ? expireTime : 0,
+                  auth_method: Number(method),
+                  issuer: userData.id,
+                  no_expires: expireTime ? false : true,
+                });
+                newLink
+                  .save()
+                  .then(() => {
+                    return res.json({
+                      code: 200,
+                      message: res.__("LINK_CREATED"),
+                    });
+                  })
+                  .catch((e) => {
+                    return res.status(500).json({
+                      code: 500,
+                      message: e,
+                    });
+                  });
               }
-            } else {
-              return res.status(403).json({
-                code: 403,
-                message: res.__("INVALID_ENTRY"),
-              });
             }
           } else {
-            return res.status(500).json({
-              code: 500,
-              message: res.__("PERMISSION_CHECK_FAILED"),
+            return res.status(403).json({
+              code: 403,
+              message: res.__("INVALID_ENTRY"),
             });
           }
         } else {
@@ -245,7 +235,6 @@ class IRouter {
       }
     } catch (err) {
       consola.error(err);
-      stream.write(err as string);
       return res.status(500).json({
         code: 500,
         message: "An error occurred while processing your request.",

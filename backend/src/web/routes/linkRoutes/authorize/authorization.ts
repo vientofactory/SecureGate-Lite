@@ -3,6 +3,7 @@ import { captcha } from "../../../modules/middlewares";
 import { utils, stream, mail } from "../../../modules";
 import { userSchema, linkSchema } from "../../../../models";
 import { client } from "../../../../bot";
+import { IDiscordUser } from "../../../types";
 import dayjs from "dayjs";
 import consola from "consola";
 
@@ -30,8 +31,8 @@ class IRouter {
       }
 
       const token = accessToken.replace("Bearer ", "");
-      const discordUser = await utils.getUser(token);
-      const localuser = await userSchema.findOne({ id: discordUser?.data.id });
+      const discordUser = res.locals.user as IDiscordUser;
+      const localuser = await userSchema.findOne({ id: discordUser.id });
       if (localuser) {
         const link = await linkSchema.findOne({ identifier: id });
         if (link) {
@@ -55,7 +56,7 @@ class IRouter {
               const invite = await utils.addGuildMember({
                 token,
                 guild_id: link.gid,
-                user_id: discordUser?.data.id,
+                user_id: discordUser.id,
                 role: link.role,
               });
               switch (invite) {
@@ -100,7 +101,7 @@ class IRouter {
                   message: res.__("EMAIL_FORMAT_ERROR"),
                 });
               }
-              const identifier = Buffer.from(`${discordUser?.data.id}+${link.identifier}+${utils.genRandomString(32)}`).toString("base64");
+              const identifier = Buffer.from(`${discordUser.id}+${link.identifier}+${utils.genRandomString(32)}`).toString("base64");
               const guild = client.guilds.cache.get(link.gid);
               if (!guild) {
                 return res.status(404).json({
@@ -138,7 +139,7 @@ class IRouter {
                     {
                       //LOCALES
                       header: res.__("EMAIL_HEAD"),
-                      user: res.__("EMAIL_USER", { user: `${discordUser?.data.global_name} (@${discordUser?.data.username})` }),
+                      user: res.__("EMAIL_USER", { user: `${discordUser.global_name} (@${discordUser.username})` }),
                       desc: res.__("EMAIL_DESC"),
                       btn: res.__("EMAIL_BTN"),
                       ignore: res.__("EMAIL_IGNORE"),
@@ -166,7 +167,7 @@ class IRouter {
                     {
                       //LOCALES
                       header: res.__("EMAIL_HEAD"),
-                      user: res.__("EMAIL_USER", { user: `${discordUser?.data.global_name} (@${discordUser?.data.username})` }),
+                      user: res.__("EMAIL_USER", { user: `${discordUser.global_name} (@${discordUser.username})` }),
                       desc: res.__("EMAIL_DESC"),
                       btn: res.__("EMAIL_BTN"),
                       ignore: res.__("EMAIL_IGNORE"),

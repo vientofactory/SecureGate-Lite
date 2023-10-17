@@ -1,7 +1,4 @@
 import { Router, Request, Response } from "express";
-import { stream } from "../modules";
-import { utils } from "../modules";
-import { IRole } from "../types";
 import { client } from "../../bot";
 import consola from "consola";
 
@@ -41,7 +38,6 @@ class IRouter {
       }
     } catch (err) {
       consola.error(err);
-      stream.write(err as string);
       return res.status(500).json({
         code: 500,
         message: "An error occurred while processing your request.",
@@ -59,11 +55,11 @@ class IRouter {
         });
       }
 
-      const guild = await utils.getGuild(id);
-      if (guild && guild.status === 200) {
-        let filtered: any[] = [];
-        guild.data.roles.forEach((e: IRole) => {
-          if (!e.managed && e.name !== "@everyone") {
+      const guild = client.guilds.cache.get(id);
+      if (guild) {
+        let filtered: { id: string; name: string }[] = [];
+        guild.roles.cache.forEach((e) => {
+          if (e.guild.id === id && !e.managed && e.name !== "@everyone") {
             filtered.push({
               id: e.id,
               name: e.name,
@@ -82,7 +78,6 @@ class IRouter {
       }
     } catch (err) {
       consola.error(err);
-      stream.write(err as string);
       return res.status(500).json({
         code: 500,
         message: "An error occurred while processing your request.",

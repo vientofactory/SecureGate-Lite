@@ -18,10 +18,10 @@ class IRouter {
 
       const link = await linkSchema.find({ identifier: id });
       if (link.length) {
-        let activeLink: any[] = [];
+        let activeLink = {};
         link.forEach((e) => {
           if (e.expiresAt > now || e.no_expires) {
-            activeLink.push({
+            Object.assign(activeLink, {
               auth_method: e.auth_method,
               createdAt: e.createdAt,
               expiresAt: e.expiresAt,
@@ -32,10 +32,10 @@ class IRouter {
             });
           }
         });
-        if (activeLink.length) {
+        if (activeLink) {
           return res.json({
             code: 200,
-            data: activeLink[activeLink.length - 1],
+            data: activeLink,
           });
         } else {
           return res.status(400).json({
