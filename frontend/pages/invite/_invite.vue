@@ -68,25 +68,23 @@
           <recaptcha />
           <v-btn size="x-large" class="joinBtn mt-5" @click="captcha(result.identifier)" block :loading="auth_loading" :disabled="auth_loading">
             {{ $t("accept") }}
-            <v-dialog v-model="dialog_captcha_error" width="auto" class="text-center">
-              <v-card>
-                <v-card-text class="white--text">
-                  {{ $t("click-captcha") }}
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn color="primary" outlined block @click="dialog_captcha_error = false">확인</v-btn>
-                </v-card-actions>
-              </v-card>
+            <v-dialog v-model="dialog_captcha_error" width="auto">
+              <Dialog @hide="dialog_captcha_error = false" footer-submit-title="확인">
+                <template v-slot:body>
+                  <span class="white--text">
+                    {{ $t("click-captcha") }}
+                  </span>
+                </template>
+              </Dialog>
             </v-dialog>
-            <v-dialog v-model="dialog_auth_error" width="auto" class="text-center">
-              <v-card>
-                <v-card-text class="white--text">
-                  {{ auth_error }}
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn color="primary" outlined block @click="dialog_auth_error = false">확인</v-btn>
-                </v-card-actions>
-              </v-card>
+            <v-dialog v-model="dialog_auth_error" width="auto">
+              <Dialog @hide="dialog_auth_error = false" footer-submit-title="확인">
+                <template v-slot:body>
+                  <span class="white--text">
+                    {{ auth_error }}
+                  </span>
+                </template>
+              </Dialog>
             </v-dialog>
           </v-btn>
         </div>
@@ -103,15 +101,14 @@
             :disabled="auth_loading"
           >
             {{ $t("accept") }}
-            <v-dialog v-model="dialog_email_error" width="auto" class="text-center">
-              <v-card>
-                <v-card-text class="white--text">
-                  {{ auth_error }}
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn color="primary" outlined block @click="dialog_email_error = false">확인</v-btn>
-                </v-card-actions>
-              </v-card>
+            <v-dialog v-model="dialog_email_error" width="auto">
+              <Dialog @hide="dialog_email_error = false" footer-submit-title="확인">
+                <template v-slot:body>
+                  <span class="white--text">
+                    {{ auth_error }}
+                  </span>
+                </template>
+              </Dialog>
             </v-dialog>
           </v-btn>
         </div>
@@ -156,11 +153,15 @@ en:
 </i18n>
 
 <script>
+import Dialog from "../../components/dialog.vue";
 export default {
   name: "InvitePage",
   layout: "invite",
   head: {
     title: "Invite",
+  },
+  components: {
+    Dialog,
   },
   data() {
     return {

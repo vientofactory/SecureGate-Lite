@@ -34,15 +34,14 @@
           {{ $t("title") }}
           <v-btn size="x-large" class="joinBtn mt-5" @click="verify($route.query.identifier)" block :loading="verifying" :disabled="verifying">
             {{ $t("btn") }}
-            <v-dialog v-model="dialog_verify_error" width="auto" class="text-center">
-              <v-card>
-                <v-card-text class="white--text">
-                  {{ verify_err }}
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn color="primary" outlined block @click="dialog_verify_error = false">확인</v-btn>
-                </v-card-actions>
-              </v-card>
+            <v-dialog v-model="dialog_verify_error" width="auto">
+              <Dialog @hide="dialog_verify_error = false" footer-submit-title="확인">
+                <template v-slot:body>
+                  <span class="white--text">
+                    {{ verify_err }}
+                  </span>
+                </template>
+              </Dialog>
             </v-dialog>
           </v-btn>
         </div>
@@ -61,11 +60,15 @@ en:
 </i18n>
 
 <script>
+import Dialog from "../../components/dialog.vue";
 export default {
   name: "emailAuthPage",
   layout: "invite",
   head: {
     title: "Authentication",
+  },
+  components: {
+    Dialog,
   },
   data() {
     return {

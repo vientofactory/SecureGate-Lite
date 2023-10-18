@@ -44,8 +44,8 @@
                 <v-icon>mdi-plus</v-icon>
                 {{ $t("create-link") }}
               </v-card-title>
-              <v-card-text>
-                <v-alert type="success" v-if="create_result" dismissible>
+              <v-card-text v-if="create_result">
+                <v-alert type="success" dismissible>
                   {{ create_result }}
                 </v-alert>
               </v-card-text>
@@ -121,8 +121,8 @@
                 <v-icon>mdi-link</v-icon>
                 {{ $t("link-list") }}
               </v-card-title>
-              <v-card-text>
-                <v-alert type="success" v-if="delete_result" dismissible>
+              <v-card-text v-if="delete_result">
+                <v-alert type="success" dismissible>
                   {{ delete_result }}
                 </v-alert>
               </v-card-text>
@@ -170,16 +170,21 @@
                 </v-card-text>
                 <v-divider></v-divider>
               </div>
-              <v-dialog v-model="dialog_delete_confirm" width="auto" class="text-center">
-                <v-card>
-                  <v-card-text class="white--text">
-                    {{ $t("delete-confirm") }}
-                  </v-card-text>
-                  <v-card-actions>
-                    <v-btn color="primary" outlined @click="dialog_delete_confirm = false">{{ $t("cancel") }}</v-btn>
-                    <v-btn color="red" outlined @click="deleteLink(delete_target)">{{ $t("delete") }}</v-btn>
-                  </v-card-actions>
-                </v-card>
+              <v-dialog v-model="dialog_delete_confirm" width="auto">
+                <Dialog
+                  @hide="dialog_delete_confirm = false"
+                  @submit="deleteLink(delete_target)"
+                  footer-submit
+                  cancelable
+                  red
+                  footer-submit-title="삭제"
+                >
+                  <template v-slot:body>
+                    <span class="white--text">
+                      {{ $t("delete-confirm") }}
+                    </span>
+                  </template>
+                </Dialog>
               </v-dialog>
             </v-card>
           </v-col>
@@ -289,10 +294,14 @@ en:
 </i18n>
 
 <script>
+import Dialog from "../../../components/dialog.vue";
 export default {
   name: "DashboardHome",
   head: {
     title: "Management",
+  },
+  components: {
+    Dialog,
   },
   data() {
     return {
