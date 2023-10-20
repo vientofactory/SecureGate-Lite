@@ -1,5 +1,4 @@
 import { Router, Request, Response } from "express";
-import { stream } from "../modules";
 import { client } from "../../bot";
 import consola from "consola";
 
@@ -20,7 +19,6 @@ class IRouter {
       });
     } catch (err) {
       consola.error(err);
-      stream.write(err as string);
       return res.status(500).json({
         code: 500,
         message: "An error occurred while processing your request.",

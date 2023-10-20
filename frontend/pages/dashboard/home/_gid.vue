@@ -31,7 +31,7 @@
           <v-col>
             <v-card class="mb-5 mx-auto">
               <v-card-title>
-                <v-avatar size="45">
+                <v-avatar size="45" class="mr-3">
                   <v-img class="align-end text-white" :src="iconFilter(guild.icon)" />
                 </v-avatar>
                 {{ guild.name }}
