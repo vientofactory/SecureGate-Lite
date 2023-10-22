@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import { captcha } from "../../../modules/middlewares";
-import { utils, stream, mail } from "../../../modules";
+import { utils, stream, captcha, mail } from "../../../modules";
 import { userSchema, linkSchema } from "../../../../models";
 import { client } from "../../../../bot";
 import { IDiscordUser } from "../../../types";

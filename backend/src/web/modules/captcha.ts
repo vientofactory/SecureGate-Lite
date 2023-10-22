@@ -1,6 +1,6 @@
 import axios from "axios";
 import consola from "consola";
-import { ICaptchaResponse } from "../../types";
+import { ICaptchaResponse } from "../types";
 
 const secretKey = process.env.RECAPTCHA_SECRET;
 

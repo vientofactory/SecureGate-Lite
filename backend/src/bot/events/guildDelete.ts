@@ -11,9 +11,9 @@ const event: BotEvent = {
     const checkGuild = await guildSchema.findOne({ gid: guild.id });
     const checkLinks = await linkSchema.find({ gid: guild.id });
     if (checkGuild) {
-      await guildSchema.deleteOne({ gid: guild.id });
+      guildSchema.deleteOne({ gid: guild.id }).exec();
       if (checkLinks.length) {
-        await linkSchema.deleteMany({ gid: guild.id });
+        linkSchema.deleteMany({ gid: guild.id }).exec();
       }
     }
     try {

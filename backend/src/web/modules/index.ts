@@ -3,3 +3,4 @@ export { DBManager } from "./mongodb";
 export { normalizePort } from "./normalize_port";
 export { mail } from "./send_mail";
 export { utils } from "./utils";
+export { captcha } from "./captcha";
