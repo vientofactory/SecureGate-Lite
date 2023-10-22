@@ -59,7 +59,7 @@ class controller {
             Object.assign(dataObj, {
               gid: guild.id,
               createdAt: now,
-              expiresAt: expireTime,
+              expiresAt: expireTime ? expireTime : 0,
               auth_method: Number(method),
               issuer: user.id,
               no_expires: expireTime ? false : true,
