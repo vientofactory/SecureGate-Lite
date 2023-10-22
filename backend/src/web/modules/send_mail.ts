@@ -27,36 +27,22 @@ export class mail {
       })
     );
   }
-  public async send(type: number, template: string, param: IEmail, locale: IEmailLocale) {
-    let replacements = {};
-    switch (type) {
-      case 1: // Verify
-        Object.assign(replacements, {
-          verify: param.verify,
-          brand: param.brand,
-          expire: param.expire,
-          title: locale.header,
-          username: locale.user,
-          link_desc: locale.desc,
-          button: locale.btn,
-          ignore_info: locale.ignore,
-          sending_only: locale.footer,
-        });
-      case 2: // Notify
-        Object.assign(replacements, {
-          brand: param.brand,
-          link: param.link,
-          title: locale.header,
-          username: locale.user,
-          content: locale.content,
-          from: locale.from,
-          sending_only: locale.footer,
-        });
-    }
+  public async send(template: string, param: IEmail, locale: IEmailLocale) {
     utils.readHTML(path.join(__dirname, "templates", template), (err: any, html: string) => {
       if (err) {
         return false;
       }
+      let replacements = {
+        verify: param.verify,
+        brand: param.brand,
+        expire: param.expire,
+        title: locale.header,
+        username: locale.user,
+        link_desc: locale.desc,
+        button: locale.btn,
+        ignore_info: locale.ignore,
+        sending_only: locale.footer,
+      };
       let template = handlebars.compile(html);
       let options = {
         from: `${process.env.SMTP_SENDER_NAME} <${process.env.USER}>`,

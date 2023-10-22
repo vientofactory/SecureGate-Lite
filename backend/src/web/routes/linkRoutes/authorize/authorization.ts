@@ -129,7 +129,6 @@ class IRouter {
                   .exec();
                 if (!isDev) {
                   new mail(email).send(
-                    1,
                     process.env.VERIFY_HTML_TEMPLATE,
                     {
                       //INFO
@@ -159,7 +158,6 @@ class IRouter {
                   .exec();
                 if (!isDev) {
                   new mail(email).send(
-                    1,
                     process.env.VERIFY_HTML_TEMPLATE,
                     {
                       //INFO
