@@ -27,22 +27,15 @@ export interface IEmail {
   link?: string;
 }
 
-export interface IVerifyLocale {
+export interface IEmailLocale {
   header: string;
   footer: string;
   user: string;
-  desc: string;
-  btn: string;
-  ignore: string;
-}
-
-export interface INotifyLocale {
-  header: string;
-  footer: string;
-  user: string;
-  content: string;
+  desc?: string;
+  content?: string;
   btn?: string;
-  from: string;
+  from?: string;
+  ignore?: string;
 }
 
 export interface IDiscordUser {

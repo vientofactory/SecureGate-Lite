@@ -128,7 +128,9 @@ class IRouter {
                   })
                   .exec();
                 if (!isDev) {
-                  new mail(email).sendVerifyMail(
+                  new mail(email).send(
+                    1,
+                    process.env.VERIFY_HTML_TEMPLATE,
                     {
                       //INFO
                       subject: res.__("EMAIL_TITLE", { guild: guild.name }),
@@ -156,7 +158,9 @@ class IRouter {
                   })
                   .exec();
                 if (!isDev) {
-                  new mail(email).sendVerifyMail(
+                  new mail(email).send(
+                    1,
+                    process.env.VERIFY_HTML_TEMPLATE,
                     {
                       //INFO
                       subject: res.__("EMAIL_TITLE", { guild: guild.name }),

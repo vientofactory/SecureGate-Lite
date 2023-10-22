@@ -1,8 +1,9 @@
 # SecureGate
 
 # 리팩토링 작업 상태
-- [X] 불필요한 API 호출 제거, 디스코드 봇 인스턴스와 직접 연동
-- [ ] 프론트엔드 컴포넌트 분리 (다이얼로그 컴포넌트화 등...)
+
+- [x] 불필요한 API 호출 제거, 디스코드 봇 인스턴스와 직접 연동
+- [x] 프론트엔드 컴포넌트 분리 (다이얼로그 컴포넌트화 등...)
 - [ ] 필요시 클린 코드로 재작성
 
 **코드가 매우 더럽습니다... 비공개 버전에서 리팩토링 작업 진행한 것 그대로 작업하겠습니다.**
@@ -52,7 +53,6 @@ SMTP_PASSWORD="(SMTP 비밀번호)"
 SMTP_SENDER="(이메일 전송자)"
 SMTP_SENDER_NAME="SecureGate" # 이메일 전송자명
 VERIFY_HTML_TEMPLATE="verify.html"
-NOTIFY_HTML_TEMPLATE="notify.html"
 EXPIRES="86400000"
 ```
 

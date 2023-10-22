@@ -1,7 +1,6 @@
 import { Transporter, createTransport } from "nodemailer";
-import { IEmail, INotifyLocale, IVerifyLocale } from "../types";
+import { IEmail, IEmailLocale } from "../types";
 import { utils } from "./utils";
-import { stream } from "./logger";
 import transport from "nodemailer-smtp-transport";
 import handlebars from "handlebars";
 import path from "path";
@@ -28,24 +27,37 @@ export class mail {
       })
     );
   }
-  public async sendVerifyMail(param: IEmail, locale: IVerifyLocale) {
-    const template = process.env.VERIFY_HTML_TEMPLATE;
+  public async send(type: number, template: string, param: IEmail, locale: IEmailLocale) {
+    let replacements = {};
+    switch (type) {
+      case 1: // Verify
+        Object.assign(replacements, {
+          verify: param.verify,
+          brand: param.brand,
+          expire: param.expire,
+          title: locale.header,
+          username: locale.user,
+          link_desc: locale.desc,
+          button: locale.btn,
+          ignore_info: locale.ignore,
+          sending_only: locale.footer,
+        });
+      case 2: // Notify
+        Object.assign(replacements, {
+          brand: param.brand,
+          link: param.link,
+          title: locale.header,
+          username: locale.user,
+          content: locale.content,
+          from: locale.from,
+          sending_only: locale.footer,
+        });
+    }
     utils.readHTML(path.join(__dirname, "templates", template), (err: any, html: string) => {
       if (err) {
         return false;
       }
       let template = handlebars.compile(html);
-      let replacements = {
-        verify: param.verify,
-        brand: param.brand,
-        expire: param.expire,
-        title: locale.header,
-        username: locale.user,
-        link_desc: locale.desc,
-        button: locale.btn,
-        ignore_info: locale.ignore,
-        sending_only: locale.footer,
-      };
       let options = {
         from: `${process.env.SMTP_SENDER_NAME} <${process.env.USER}>`,
         to: this.to,
@@ -57,39 +69,7 @@ export class mail {
           if (isDev) consola.error(err);
           return false;
         }
-        stream.write(`Email Sended. Accepted: ${res.accepted} | Response: ${res.response} | messageId: ${res.messageId}`);
-        return true;
-      });
-    });
-  }
-  public async sendNotifyMail(param: IEmail, locale: INotifyLocale) {
-    const template = process.env.NOTIFY_HTML_TEMPLATE;
-    utils.readHTML(path.join(__dirname, "templates", template), (err: any, html: string) => {
-      if (err) {
-        return false;
-      }
-      let template = handlebars.compile(html);
-      let replacements = {
-        brand: param.brand,
-        link: param.link,
-        title: locale.header,
-        username: locale.user,
-        content: locale.content,
-        from: locale.from,
-        sending_only: locale.footer,
-      };
-      let options = {
-        from: `${process.env.SMTP_SENDER_NAME} <${process.env.USER}>`,
-        to: this.to,
-        subject: param.subject,
-        html: template(replacements),
-      };
-      this.smtpTransport.sendMail(options, (err, res) => {
-        if (err) {
-          if (isDev) consola.error(err);
-          return false;
-        }
-        stream.write(`Email Sended. Accepted: ${res.accepted} | Response: ${res.response} | messageId: ${res.messageId}`);
+        console.info(res);
         return true;
       });
     });
